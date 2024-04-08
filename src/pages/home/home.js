@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
 const home = () => {
   return (
-    <div className='text-orange-500 bg-blue-500 p-4 underline'>home</div>
-  )
-}
+    <div className="font-semibold text-center ">
+      <h1 className="text-2xl text-orange-600">Home</h1>
+    <p>Responsive Designs take time ;(</p>
+    </div>
+  );
+};
 
-export default home
+export default home;
