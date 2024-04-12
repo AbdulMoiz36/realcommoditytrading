@@ -9,7 +9,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between items-center w-full mx-auto p-2 px-10 md:px-32 lg:px-16 ">
+    <nav className="sticky top-0 z-50 flex justify-between items-center w-full mx-auto p-2 px-10 md:px-32 lg:px-16 bg-white">
       <div className="">
         <img src="https://realcommoditytrading.com/frontend/new_assets/img/logo.svg" alt="Logo" className="w-auto" />
       </div>
@@ -21,31 +21,31 @@ const Navbar = () => {
         </div>
         <ul className="flex lg:flex-row flex-col lg:items-center gap-5 lg:gap-[2vw] px-8">
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw]" href="#">Home</a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw]" href="#">Home</a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw]" href="#">About Us</a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw]" href="#">About Us</a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">PETROLEUM<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">PETROLEUM<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">METAL<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">METAL<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">AGRI/MEAT<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">AGRI/MEAT<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">FINANCE<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">FINANCE<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">SERVICE<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">SERVICE<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">Q&A<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">Q&A<IoMdArrowDropdown /></a>
           </li>
           <li>
-            <a className="hover:text-green-500 font-semibold lg:text-[1.1vw] flex items-center gap-1" href="#">Inquiry<IoMdArrowDropdown /></a>
+            <a className="hover:text-green-500 font-semibold lg:font-normal lg:text-[1vw] flex items-center gap-1" href="#">Inquiry<IoMdArrowDropdown /></a>
           </li>
         </ul>
       </div>
