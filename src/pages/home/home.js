@@ -81,12 +81,12 @@ const home = () => {
         </div>
       </div>
       <div className="w-full flex flex-col  mx-auto ">
-          <div className="bg-blue-500 w-4/5 md:w-3/5 text-center rounded-t-3xl mt-14 p-6 mx-auto">
+          <div className="bg-blue-500 w-5/5  md:w-3/5 text-center rounded-t-3xl mt-14 p-6 mx-2 md:mx-auto">
             <h2 className="font-bold text-5xl text-white">Verified Offers</h2>
           </div>
-          <div className=" w-4/5 md:w-3/5 mx-auto text-center p-7 border-x-2 border-blue-500 bg-white">
+          <div className=" w-5/5 md:w-3/5 mx-2 md:mx-auto text-center p-7 border-x-2 border-blue-500 bg-white">
             <div>
-              <p className="mb-7">
+              <p className="mb-7 sm:text-sm md:text-lg">
           Verified offers are created by our company only if Previous Record(s), Proof of Product(s), or Proof of Fund(s) is provided to us.
               </p>
            {/* <Button text={"Request a Verified Offer Post"} color={"yellow"} link={"#"}></Button>       */}

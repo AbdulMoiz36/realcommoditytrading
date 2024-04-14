@@ -38,7 +38,7 @@ body, html {
   }
 
   .btn-yellow{
-    background-color: rgb(255, 187, 0);
+    background-color: rgb(255, 175, 2);
   }
 
   .btn-yellow:hover{
@@ -67,7 +67,7 @@ body, html {
 }
 
 .card-div{
-  background: linear-gradient(to top, rgb(251, 222, 116) , white 40%);
+  background: radial-gradient(circle at bottom, rgb(255, 231, 143), white 70%);
 }
   
 
