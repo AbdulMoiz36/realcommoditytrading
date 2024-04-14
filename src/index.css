@@ -94,3 +94,59 @@ body, html {
 .slick-prev:before, .slick-next:before{
   color: black!important;
 }
+
+/* Navbar */
+
+@media (min-width: 1024px) {
+  .navigation-list li ul{
+    display: none;
+    position: absolute;
+    background-color: white;
+    padding: 2rem 1.5rem;
+    translate: -20px;
+    border-radius: 10px 10px;
+    box-shadow: 2px 2px 8px 2px greenyellow;
+  }
+  .navigation-list li ul li{
+    font-weight: 500;
+    padding: 8px 2rem;
+    border-bottom: 3px solid gainsboro;
+    border-radius: 5px;
+    transition: all 300ms ease-in-out;
+  }
+  .navigation-list li:hover ul {
+    display: block;
+  }
+  
+  .navigation-list li ul li:hover{
+    border-bottom: 3px solid greenyellow;
+    transform: scale(1.15);
+  }
+}
+
+@media (max-width: 1023px){
+  .navigation-list li ul{
+    display: none;
+    position: relative;
+    background-color: white;
+    padding: 2rem 1.5rem;
+    translate: -20px;
+    border-radius: 10px 10px;
+    box-shadow: 2px 2px 8px 2px greenyellow;
+  }
+  .navigation-list li ul li{
+    font-weight: 500;
+    padding: 8px 2rem;
+    border-bottom: 3px solid gainsboro;
+    border-radius: 5px;
+    transition: all 300ms ease-in-out;
+  }
+  .navigation-list li:hover ul {
+    display: block;
+  }
+  
+  .navigation-list li ul li:hover{
+    border-bottom: 3px solid greenyellow;
+    transform: scale(1.15);
+  }
+}
