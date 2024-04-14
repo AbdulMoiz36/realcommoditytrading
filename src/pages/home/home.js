@@ -129,7 +129,7 @@ const Home = () => {
   useEffect(() => {
     const fetchVerifiedOffers = async () => {
       try {
-        const response = await axios.get(`http://${backend}/verified_offers`);
+        const response = await axios.get(`https://realcommoditytradingbackend.vercel.app/verified_offers/`);
         setOffers(response.data);
       } catch (error) {
         console.error('Error fetching verified offers:', error);
