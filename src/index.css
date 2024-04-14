@@ -38,7 +38,7 @@ body, html {
   }
 
   .btn-yellow{
-    background-color: rgb(223, 175, 17);
+    background-color: rgb(255, 187, 0);
   }
 
   .btn-yellow:hover{
@@ -59,10 +59,38 @@ body, html {
     background-color: rgb(43, 191, 2);
 }
   .btn-blue{
-    background-color: rgb(0, 73, 232);
+    background-color: rgb(37, 101, 239);
   }
 
   .btn-blue:hover{
     background-color: rgb(2, 30, 191);
 }
+
+.card-div{
+  background: linear-gradient(to top, rgb(251, 222, 116) , white 40%);
+}
   
+
+::-webkit-scrollbar {
+  width: 5px; /* Adjust as needed */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ffffff; /* Background color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ffc400; /* Color of the scrollbar handle */
+  border-radius: 8px; /* Rounded corners */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Change color on hover */
+}
+
+.slick-prev:before, .slick-next:before{
+  color: black!important;
+}
