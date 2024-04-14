@@ -135,11 +135,6 @@ const Home = () => {
         console.error('Error fetching verified offers:', error);
       }
     };
-
-
-
-
-
     fetchVerifiedOffers();
   }, []);
 
@@ -190,13 +185,15 @@ const Home = () => {
           slidesToShow: 2,
           slidesToScroll: 2,
           initialSlide: 2,
+          dots:true,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 500,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          dots:false,
         },
       },
     ],
