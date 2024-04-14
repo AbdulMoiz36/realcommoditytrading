@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/button";
 import Card from "../../components/card";
 import "slick-carousel/slick/slick.css";
@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick-theme.css";
 import faqImage from "../../images/faq.png";
 import Accordion from "../../components/accordion";
 import Slider from "react-slick";
+import axios from 'axios';
+
 
 const accordianItems = [
   {
@@ -121,7 +123,27 @@ Our dedicated partners will be rewarded for their invaluable contribution to our
   },
 ];
 
-const home = () => {
+const Home = () => {
+  const [offers, setOffers] = useState([]);
+  const backend = "localhost:9001";
+  useEffect(() => {
+    const fetchVerifiedOffers = async () => {
+      try {
+        const response = await axios.get(`http://${backend}/verified_offers`);
+        setOffers(response.data);
+      } catch (error) {
+        console.error('Error fetching verified offers:', error);
+      }
+    };
+
+
+
+
+
+    fetchVerifiedOffers();
+  }, []);
+
+  
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -180,6 +202,7 @@ const home = () => {
     ],
   };
   return (
+    
     <>
       {/* Banner */}
       <div className="banner h-[80vh] w-full flex justify-center items-center">
@@ -215,46 +238,18 @@ const home = () => {
       </div>
       <div className="verified-offers-cards px-10 md:mx-12 lg:mx-32 border-y-4 border-blue-500 rounded-lg mt-[-0.5rem] z-10 ">
         <Slider {...settings}>
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
+        {offers.map((offer, index) => (
+            <Card
+              key={index}
+              title={offer.offer_title}
+              category={offer.offer_type}
+              likes={10}
+              views={offer.visitors_count}
+              comments={10}
+              date={new Date(offer.created_at).toLocaleDateString()}
+            />
+          ))}
+         
           <Card
             title="Article Title"
             category="Technology"
@@ -357,4 +352,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;
