@@ -246,15 +246,6 @@ const Home = () => {
               date={new Date(offer.created_at).toLocaleDateString()}
             />
           ))}
-         
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
         </Slider>
         <div className="text-center mt-10 mb-5">
           <Button
