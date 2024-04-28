@@ -1,8 +1,6 @@
 import React from "react";
 import { BiMessageDetail } from "react-icons/bi";
 import { IoMdHeart, IoMdEye  } from "react-icons/io";
-import { Link } from "react-router-dom";
-import Button from "./button";
 
 const Card = ({ title, category, likes, views, comments, date }) => {
   return (

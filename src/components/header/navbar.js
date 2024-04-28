@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoMdMenu, IoIosClose, IoMdArrowDropdown } from "react-icons/io";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,280 +39,280 @@ const Navbar = () => {
         </div>
         <ul className="navigation-list px-10 flex lg:flex-row flex-col lg:items-center gap-5 lg:gap-[1vw] ">
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw]"
               href="#"
             >
               Home
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw]"
               href="#"
             >
               About Us
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               PETROLEUM
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Crude Oil</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>EN590</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>LCO</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>LNG/LPG</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>A1/JP54</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               METAL
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Copper</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Aluminum</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Gold</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Used Rail</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Iron Ores</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               AGRI/MEAT
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Soybean</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Sugar</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Seed Oils</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Beef</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Chicken</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Pork</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               FINANCE
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Project Finance</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Project Finance</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Bank Instruments</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               SERVICE
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Escrow Lawyer</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Shipping</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Storage</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Banking</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               Q&A
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>PETROLEUM</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>METAL</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>AGRI/MEAT</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>FINANCE</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>
           <li>
-            <a
+            <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
               href="#"
             >
               Inquiry
               <IoMdArrowDropdown />
-            </a>
+            </NavLink>
             <ul>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Verified Offers</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Website Issues</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Partner Program</p>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#">
+                <NavLink href="#">
                   <p>Others</p>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>

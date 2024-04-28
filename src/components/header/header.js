@@ -1,19 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { ReactCountryFlag } from "react-country-flag";
+import { NavLink } from "react-router-dom";
 import Navbar from "./navbar";
 
 const Header = () => {
   return (
     <>
       <div className="bg-blue-600 text-white h-7">
-        <marquee>
-          {" "}
+        <div>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero fugit
           hic ipsam expedita exercitationem dignissimos magnam non reprehenderit
           debitis adipisci porro ratione quidem sequi, iusto laborum, totam
           veritatis quaerat harum.{" "}
-        </marquee>
+        </div>
       </div>
 
       <div className="bg-green-700 text-white grid gap-3 p-2 px-[5%] grid-cols-1 md:grid-cols-3">
@@ -30,9 +28,9 @@ const Header = () => {
   </div>
 
   <div className="mx-auto text-center grid grid-cols-2 place-items-center">
-    <Link to="/login" className="" >
+    <NavLink to="/login" className="" >
       <p className="font-medium ">Login/Register</p>
-    </Link>
+    </NavLink>
     <select name="" id="" defaultValue="English" className="px-6 py-1 bg-transparent outline-none border font-medium mt-2 md:mt-0 text-white">
       <option value="English" className="text-black "> English</option>
     </select>

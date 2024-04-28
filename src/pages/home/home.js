@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../components/button";
-import Card from "../../components/card";
+// import Card from "../../components/card";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import faqImage from "../../images/faq.png";
 import Accordion from "../../components/accordion";
-import Slider from "react-slick";
-import axios from 'axios';
-
+// import axios from 'axios';
+import { NavLink } from "react-router-dom";
+import DataTable from "../../components/datatable";
+import { FaRegHeart ,FaRegCommentAlt } from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa6";
 
 const accordianItems = [
   {
@@ -95,111 +97,114 @@ const accordianItems = [
           welcome here at our trading platform!
         </p>
         <p>
-        Find more at https://realcommoditytrading.com/service-fees-and-commision.
+          Find more at
+          https://realcommoditytrading.com/service-fees-and-commision.
         </p>
       </>
     ),
   },
   {
     title: "What is the benefit of becoming a partner?",
-    content: <>
-    <p>
-    When you join us as a Partner you become a part of our team and network, which helps you find qualified matching companies. You are more trusted by clients now, as our name is associated with you. The commission from your valuable hard work is more secure when we work together as a team.
-    </p>
-<br />
-    <p>
-Our dedicated partners will be rewarded for their invaluable contribution to our ongoing success. Their efforts have helped propel us forward, and we are thrilled to recognize them with fitting rewards!
-    </p>
-<br />
-<p>
-<b>Join Us at</b> : https://realcommoditytrading.com/partner-registration
-</p>
-
-    </>,
+    content: (
+      <>
+        <p>
+          When you join us as a Partner you become a part of our team and
+          network, which helps you find qualified matching companies. You are
+          more trusted by clients now, as our name is associated with you. The
+          commission from your valuable hard work is more secure when we work
+          together as a team.
+        </p>
+        <br />
+        <p>
+          Our dedicated partners will be rewarded for their invaluable
+          contribution to our ongoing success. Their efforts have helped propel
+          us forward, and we are thrilled to recognize them with fitting
+          rewards!
+        </p>
+        <br />
+        <p>
+          <b>Join Us at</b> :
+          https://realcommoditytrading.com/partner-registration
+        </p>
+      </>
+    ),
   },
   {
     title: "What is the wallet?",
-    content: "By becoming a partner or contributing to the company, partners can store their hard-earned credits in this handy wallet for later use.",
+    content:
+      "By becoming a partner or contributing to the company, partners can store their hard-earned credits in this handy wallet for later use.",
   },
 ];
 
 const Home = () => {
-  const [offers, setOffers] = useState([]);
-  const backend = "localhost:9001";
+  const [vOffers, setvOffers] = useState([]);
+
   useEffect(() => {
-    const fetchVerifiedOffers = async () => {
-      try {
-        const response = await axios.get(`https://realcommoditytradingbackend.vercel.app/verified_offers/`);
-        setOffers(response.data);
-      } catch (error) {
-        console.error('Error fetching verified offers:', error);
-      }
-    };
     fetchVerifiedOffers();
   }, []);
 
-  
-  function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block" }}
-        onClick={onClick}
-      />
-    );
-  }
-
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block" }}
-        onClick={onClick}
-      />
-    );
-  }
-  var settings = {
-    dots: true,
-    infinite: false,
-    speed: 800,
-    slidesToShow: 3,
-    slidesToScroll: 4,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1100,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-          dots:true,
-        },
-      },
-      {
-        breakpoint: 500,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          dots:false,
-        },
-      },
-    ],
+  const fetchVerifiedOffers = async () => {
+    try {
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/verified_offers/",
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      setvOffers(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const columns = [
+    {
+      Header: "Title",
+      accessor: "offer_title",
+    },
+    {
+      Header: "Type",
+      accessor: "offer_type",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegHeart className="mx-auto" />
+        </div>
+      ),
+      accessor: "h",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegCommentAlt className="mx-auto" />
+        </div>
+      ),
+      accessor: "hw",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegEye className="mx-auto"/> 
+        </div>
+      ),
+      accessor: "h2",
+    },
+    {
+      Header: "Offer Date",
+      accessor: "created_at",
+      Cell: ({ value }) => {
+        const date = new Date(value);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear().toString().slice(-2);
+        return `${day}-${month}-${year}`;
+      },
+    },
+  ];
+
   return (
-    
     <>
       {/* Banner */}
       <div className="banner h-[80vh] w-full flex justify-center items-center">
@@ -214,47 +219,35 @@ const Home = () => {
           </h4>
           <Button text="Join Us As A Partner" color="yellow" link="/#" />
           <p className="font-bold quick-guide">
-            Win $100,00 <a href="#"> Find More &gt;</a>
+            Win $100,00 <NavLink href="#"> Find More &gt;</NavLink>
           </p>
         </div>
       </div>
       {/* Verified Offers Section */}
-      <div className="verified-offers w-full flex flex-col  mx-auto ">
-        <div className="bg-blue-500 w-5/5  md:w-3/5 text-center rounded-t-3xl mt-14 p-6 mx-2 md:mx-auto">
-          <h2 className="font-bold text-5xl text-white">Verified Offers</h2>
-        </div>
-        <div className=" w-5/5 md:w-3/5 mx-2 md:mx-auto text-center p-7 border-x-2 border-blue-500 bg-white">
-          <div>
-            <p className="mb-7 sm:text-sm md:text-lg">
+
+      <div className="grid grid-cols-12 mx-48 gap-24 mt-24">
+        <div className="verified-offers col-span-4">
+          <div className="bg-blue-500 rounded-t-lg  py-8">
+            <h2 className="font-semibold text-5xl mx-8 text-white">Verified Offers</h2>
+          </div>
+          <div className="border-blue-500 bg-white p-6">
+            <p className=" sm:text-sm md:text-md">
               Verified offers are created by our company only if Previous
               Record(s), Proof of Product(s), or Proof of Fund(s) is provided to
               us.
             </p>
           </div>
+            <div className="text-center">
+            <NavLink to="/#">
+            <button className="btn-yellow text-white font-bold py-4 px-8 text-md rounded-lg hover:shadow-lg transition-all ease-in-out duration-500 ">Request a Verified Offer Post</button>
+            </NavLink>
+            </div>
+        </div>
+        <div className="md:col-span-8 overflow-x-auto rounded-lg">
+          <DataTable columns={columns} data={vOffers} />
         </div>
       </div>
-      <div className="verified-offers-cards px-10 md:mx-12 lg:mx-32 border-y-4 border-blue-500 rounded-lg mt-[-0.5rem] z-10 ">
-        <Slider {...settings}>
-        {offers.map((offer, index) => (
-            <Card
-              key={index}
-              title={offer.offer_title}
-              category={offer.offer_type}
-              likes={10}
-              views={offer.visitors_count}
-              comments={10}
-              date={new Date(offer.created_at).toLocaleDateString()}
-            />
-          ))}
-        </Slider>
-        <div className="text-center mt-10 mb-5">
-          <Button
-            text={"Request a Verified Offer Post"}
-            color={"yellow"}
-            link={"#"}
-          ></Button>
-        </div>
-      </div>
+
       {/* Offers Section */}
       <div className="offers w-full flex flex-col  mx-auto ">
         <div className="bg-green-500 w-5/5  md:w-3/5 text-center rounded-t-3xl mt-14 p-6 mx-2 md:mx-auto">
@@ -270,56 +263,6 @@ const Home = () => {
         </div>
       </div>
       <div className="offers-cards px-10 md:mx-12 lg:mx-32 border-y-4 border-green-500 rounded-lg mt-[-0.5rem] z-10 ">
-        <Slider {...settings}>
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-          <Card
-            title="Article Title"
-            category="Technology"
-            likes={25}
-            views={100}
-            comments={5}
-            date="April 12, 2024"
-          />
-        </Slider>
         <div className="text-center mt-10 mb-5">
           <Button
             text={"Create An Offer Post"}
@@ -330,7 +273,7 @@ const Home = () => {
       </div>
       {/* Faq */}
       <div className="flex justify-center p-10">
-        <img src={faqImage} alt="Faq Image" />
+        <img src={faqImage} alt="Faq" />
       </div>
       <div className=" mx-10 md:mx-40">
         <Accordion items={accordianItems} />
