@@ -46,7 +46,7 @@ const DataTable = ({ columns, data , color }) => {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()} className='border-r border-slate-400 min-w-16 py-2 max-w-max font-normal'>{column.render('Header')}</th>
+                <th {...column.getHeaderProps()} className='border-r border-slate-400 min-w-16 py-1 max-w-max font-normal'>{column.render('Header')}</th>
               ))}
             </tr>
           ))}
@@ -59,7 +59,7 @@ const DataTable = ({ columns, data , color }) => {
               <tr {...row.getRowProps()} className=''>
                 {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}  className='p-1 font-normal '>{cell.render('Cell')}</td>
+                    <td {...cell.getCellProps()}  className=' font-normal '>{cell.render('Cell')}</td>
                   );
                 })}
               </tr>
