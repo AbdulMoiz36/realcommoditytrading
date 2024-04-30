@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoMdMenu, IoIosClose, IoMdArrowDropdown } from "react-icons/io";
 import { NavLink } from "react-router-dom";
+import logo from '../../images/logo.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,9 +14,9 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 flex justify-between lg:justify-center items-center gap-5 w-full mx-auto p-2 px-10 md:px-32 lg:px-16 bg-white">
       <div className="">
         <img
-          src="https://realcommoditytrading.com/frontend/new_assets/img/logo.svg"
+          src={logo}
           alt="Logo"
-          className="w-auto"
+          className="w-56"
         />
       </div>
 
