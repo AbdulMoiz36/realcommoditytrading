@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "./navbar";
-
 const Header = () => {
   return (
     <>
@@ -31,9 +30,10 @@ const Header = () => {
     <NavLink to="/login" className="" >
       <p className="font-medium ">Login/Register</p>
     </NavLink>
-    <select name="" id="" defaultValue="English" className="px-6 py-1 bg-transparent outline-none border font-medium mt-2 md:mt-0 text-white">
-      <option value="English" className="text-black "> English</option>
-    </select>
+    <div className="translation-div py-1 bg-transparent font-medium mt-2 md:mt-0 text-white">
+    <div id="google_translate_element" className="border border-white "></div>
+    </div>
+
   </div>
 </div>
       <Navbar />
