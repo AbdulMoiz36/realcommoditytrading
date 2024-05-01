@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "./navbar";
 const Header = () => {
+  const [topBarData, setTopBarData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://realcommoditytradingbackend.vercel.app/businessinsider`);
+        const jsonData = await response.json();
+        setTopBarData(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
-      <div className="bg-blue-600 text-white h-7">
-        <div>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero fugit
-          hic ipsam expedita exercitationem dignissimos magnam non reprehenderit
-          debitis adipisci porro ratione quidem sequi, iusto laborum, totam
-          veritatis quaerat harum.{" "}
+      <div className="top-bar bg-blue-600 text-white h-7 ">
+        <div className="marquee-div flex flex-row gap-8">
+        {topBarData.map((item, index) => (
+          <div key={index} className="flex text-nowrap items-center">
+          <p className="mr-2 font-bold text-sm">{item.name}</p>
+          <p>{item.unit}</p>
+          <p>{item.price}</p>
         </div>
+      ))}
+      </div>
       </div>
 
       <div className="bg-green-600 text-white grid gap-3 p-2 px-[5%] grid-cols-1 md:grid-cols-3">

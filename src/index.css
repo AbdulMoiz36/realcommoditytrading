@@ -183,7 +183,6 @@ border: 0;
 
 /*  To Disable google's top banner of translation*/
 .goog-te-gadget{
-  /* background-color: white; */
   color: transparent !important;
 }
 .VIpgJd-ZVi9od-ORHb-OEVmcd{
@@ -192,5 +191,20 @@ border: 0;
 
 body{
   top: 0px !important;
+}
+
+
+/* Top Bar Animation */
+.marquee-div {
+  animation: marquee 60s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(-380%);
+  }
 }
 
