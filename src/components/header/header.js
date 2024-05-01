@@ -13,29 +13,31 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="bg-green-700 text-white grid gap-3 p-2 px-[5%] grid-cols-1 md:grid-cols-3">
-  <div className=" mx-auto text-center flex items-center">
-    <p className="font-bold text-lg quick-guide">Quick Guide</p>
-  </div>
+      <div className="bg-green-600 text-white grid gap-3 p-2 px-[5%] grid-cols-1 md:grid-cols-3">
+        <div className=" mx-auto text-center flex items-center">
+          <p className="font-bold text-lg quick-guide">Quick Guide</p>
+        </div>
 
-  <div className="col-span-full md:col-span-1 ">
-    <input
-      type="text"
-      placeholder="Search..."
-      className="w-full bg-transparent border border-white placeholder:text-gray-200 focus:outline-yellow-300 p-3"
-    />
-  </div>
+        <div className="col-span-full md:col-span-1 ">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full bg-transparent border border-white placeholder:text-gray-200 focus:outline-yellow-300 p-3"
+          />
+        </div>
 
-  <div className="mx-auto text-center grid grid-cols-2 place-items-center">
-    <NavLink to="/login" className="" >
-      <p className="font-medium ">Login/Register</p>
-    </NavLink>
-    <div className="translation-div py-1 bg-transparent font-medium mt-2 md:mt-0 text-white">
-    <div id="google_translate_element" className="border border-white "></div>
-    </div>
-
-  </div>
-</div>
+        <div className="mx-auto text-center grid grid-cols-2 place-items-center">
+          <NavLink to="/login" className="">
+            <p className="font-medium ">Login/Register</p>
+          </NavLink>
+          <div className="translation-div py-1 bg-transparent font-medium mt-2 md:mt-0 text-white">
+            <div
+              id="google_translate_element"
+              className="border border-white "
+            ></div>
+          </div>
+        </div>
+      </div>
       <Navbar />
     </>
   );

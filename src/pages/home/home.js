@@ -8,7 +8,7 @@ import Accordion from "../../components/accordion";
 // import axios from 'axios';
 import { NavLink } from "react-router-dom";
 import DataTable from "../../components/datatable";
-import { FaRegHeart ,FaRegCommentAlt } from "react-icons/fa";
+import { FaRegHeart, FaRegCommentAlt } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 
 const accordianItems = [
@@ -164,10 +164,6 @@ const Home = () => {
       accessor: "offer_title",
     },
     {
-      Header: "Type",
-      accessor: "offer_type",
-    },
-    {
       Header: () => (
         <div>
           <FaRegHeart className="mx-auto" />
@@ -186,10 +182,14 @@ const Home = () => {
     {
       Header: () => (
         <div>
-          <FaRegEye className="mx-auto"/> 
+          <FaRegEye className="mx-auto" />
         </div>
       ),
       accessor: "h2",
+    },
+    {
+      Header: "Type",
+      accessor: "offer_type",
     },
     {
       Header: "Offer Date",
@@ -224,53 +224,59 @@ const Home = () => {
         </div>
       </div>
       {/* Verified Offers Section */}
-
-      <div className="grid grid-cols-12 mx-48 gap-24 mt-24">
-        <div className="verified-offers col-span-4">
-          <div className="bg-blue-500 rounded-t-lg  py-8">
-            <h2 className="font-semibold text-5xl mx-8 text-white">Verified Offers</h2>
+      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-36 lg:my-24">
+        <div className="verified-offers md:w-2/6 md:mr-4 mb-4 md:mb-0">
+          <div className="bg-blue-500 rounded-t-lg py-8">
+            <h2 className="font-semibold text-white lg:text-5xl md:text-4xl text-4xl text-center md:text-left lg:px-8 md:px-6">
+              Verified Offers
+            </h2>
           </div>
           <div className="border-blue-500 bg-white p-6">
-            <p className=" sm:text-sm md:text-md">
+            <p className="text-md">
               Verified offers are created by our company only if Previous
               Record(s), Proof of Product(s), or Proof of Fund(s) is provided to
               us.
             </p>
           </div>
-            <div className="text-center">
+          <div className="text-center mt-4">
             <NavLink to="/#">
-            <button className="btn-yellow text-white font-bold py-4 px-8 text-md rounded-lg hover:shadow-lg transition-all ease-in-out duration-500 ">Request a Verified Offer Post</button>
+              <button className="btn-yellow text-white font-bold py-4 px-6 text-md rounded-lg hover:shadow-lg transition-all ease-in-out duration-500">
+                Request a Verified Offer Post
+              </button>
             </NavLink>
-            </div>
+          </div>
         </div>
-        <div className="md:col-span-8 overflow-x-auto rounded-lg">
-          <DataTable columns={columns} data={vOffers} />
+        <div className="overflow-x-auto rounded-t-2xl w-full">
+          <DataTable columns={columns} data={vOffers} color={"blue"} />
         </div>
       </div>
-
       {/* Offers Section */}
-      <div className="offers w-full flex flex-col  mx-auto ">
-        <div className="bg-green-500 w-5/5  md:w-3/5 text-center rounded-t-3xl mt-14 p-6 mx-2 md:mx-auto">
-          <h2 className="font-bold text-5xl text-white">Offers</h2>
-        </div>
-        <div className=" w-5/5 md:w-3/5 mx-2 md:mx-auto text-center p-7 border-x-2 border-green-500 bg-white">
-          <div>
-            <p className="mb-7 sm:text-sm md:text-lg">
+      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-36 lg:my-24">
+        <div className="verified-offers md:w-2/6 md:mr-4  md:mb-0">
+          <div className="bg-green-500 rounded-t-lg py-8">
+            <h2 className="font-semibold text-white lg:text-5xl md:text-4xl text-4xl text-center md:text-left lg:px-8 md:px-6">
+              Offers
+            </h2>
+          </div>
+          <div className="border-green-500 bg-white p-6">
+            <p className="text-md">
               Offers are created by our members but without Previous Record(s),
               Proof of Product(s), or Proof of Fund(s).
             </p>
           </div>
+          <div className="text-center mt-4">
+            <NavLink to="/#">
+              <button className="btn-yellow text-white font-bold py-4 px-6 text-md rounded-lg hover:shadow-lg transition-all ease-in-out duration-500">
+                Create An Offer Post
+              </button>
+            </NavLink>
+          </div>
+        </div>
+        <div className="overflow-x-auto rounded-t-2xl w-full">
+          <DataTable columns={columns} data={vOffers} color={"green"} />
         </div>
       </div>
-      <div className="offers-cards px-10 md:mx-12 lg:mx-32 border-y-4 border-green-500 rounded-lg mt-[-0.5rem] z-10 ">
-        <div className="text-center mt-10 mb-5">
-          <Button
-            text={"Create An Offer Post"}
-            color={"yellow"}
-            link={"#"}
-          ></Button>
-        </div>
-      </div>
+
       {/* Faq */}
       <div className="flex justify-center p-10">
         <img src={faqImage} alt="Faq" />

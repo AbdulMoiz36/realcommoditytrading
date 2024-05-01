@@ -8,7 +8,6 @@ import Signup from './pages/auth/signup';
 const App = () => {
   return (
     <Router>
-      <div>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -16,7 +15,6 @@ const App = () => {
           <Route path="/login" element={<Login />} />
         </Routes>
         <Footer/>
-      </div>
     </Router>
   );
 };

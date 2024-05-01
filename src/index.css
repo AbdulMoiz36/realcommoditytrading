@@ -13,10 +13,7 @@
     box-sizing: border-box;
   }
   
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-  }
+  
 
   @keyframes colorTransition {
     0% {
@@ -31,12 +28,15 @@
     animation: colorTransition 2s infinite alternate; /* Use 'alternate' to reverse the animation direction */
   }
 
-  .banner{
+  .banner {
+    position: relative;
     background: url("./images/Banner.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    filter: brightness(0.9) contrast(1.3); /* Adjust the values as needed */
   }
+  
 
   .btn-yellow{
     background-color: rgb(255, 175, 2);
@@ -74,6 +74,7 @@
 
 ::-webkit-scrollbar {
   width: 5px; /* Adjust as needed */
+  height: 5px;
 }
 
 /* Track */
@@ -192,3 +193,4 @@ border: 0;
 body{
   top: 0px !important;
 }
+
