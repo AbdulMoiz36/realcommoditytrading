@@ -33,7 +33,7 @@ const Header = () => {
           <div className="translation-div py-1 bg-transparent font-medium mt-2 md:mt-0 text-white">
             <div
               id="google_translate_element"
-              className="border border-white "
+              className="border border-white bg-transparent"
             ></div>
           </div>
         </div>

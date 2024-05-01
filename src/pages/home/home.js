@@ -170,6 +170,7 @@ const Home = () => {
         </div>
       ),
       accessor: "h",
+      Cell: () => "hello",
     },
     {
       Header: () => (
@@ -178,6 +179,7 @@ const Home = () => {
         </div>
       ),
       accessor: "hw",
+      Cell: () => "Hello",
     },
     {
       Header: () => (
@@ -185,7 +187,7 @@ const Home = () => {
           <FaRegEye className="mx-auto" />
         </div>
       ),
-      accessor: "h2",
+      accessor: "visitors_count",
     },
     {
       Header: "Type",
@@ -247,7 +249,7 @@ const Home = () => {
           </div>
         </div>
         <div className="overflow-x-auto rounded-t-2xl w-full">
-          <DataTable columns={columns} data={vOffers} color={"blue"} />
+          {/* <DataTable columns={columns} data={vOffers} color={"blue"} /> */}
         </div>
       </div>
       {/* Offers Section */}
@@ -273,7 +275,7 @@ const Home = () => {
           </div>
         </div>
         <div className="overflow-x-auto rounded-t-2xl w-full">
-          <DataTable columns={columns} data={vOffers} color={"green"} />
+          {/* <DataTable columns={columns} data={vOffers} color={"green"} /> */}
         </div>
       </div>
 
