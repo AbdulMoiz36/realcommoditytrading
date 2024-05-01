@@ -19,7 +19,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="top-bar bg-blue-600 text-white h-7 ">
+      <div className="top-bar bg-blue-600 text-white h-7 overflow-x-hidden ">
         <div className="marquee-div flex flex-row gap-8">
         {topBarData.map((item, index) => (
           <div key={index} className="flex text-nowrap items-center">
