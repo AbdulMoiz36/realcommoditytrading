@@ -48,7 +48,6 @@ const DataTable = ({ columns, data, color }) => {
         return "inherit";
     }
   };
-
   // Set fixed widths for columns
   columns.forEach((column, index) => {
     if (index === 0) {
@@ -57,7 +56,6 @@ const DataTable = ({ columns, data, color }) => {
       column.width = 90;
     }
   });
-
   return (
     <>
       <div>
@@ -71,8 +69,6 @@ const DataTable = ({ columns, data, color }) => {
       </div>
       <table {...getTableProps()} className="w-full border-2">
         <thead className={`bg-${color}-500 text-white rounded-t-lg border-2`}>
-          {" "}
-          {/* Dynamically set background color based on color prop */}
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, index) => (
@@ -89,7 +85,6 @@ const DataTable = ({ columns, data, color }) => {
             </tr>
           ))}
         </thead>
-
         <tbody {...getTableBodyProps()} className="font-normal">
           {page.map((row) => {
             prepareRow(row);
@@ -137,9 +132,9 @@ const DataTable = ({ columns, data, color }) => {
         </div>
         <div className="ml-4">
           <span>
-            Page{" "}
+            Page
             <strong>
-              <span className={`text-${color}-600`}>{pageIndex + 1}</span> of{" "}
+              <span className={`text-${color}-600`}>{pageIndex + 1}</span> of
               {totalPages}
             </strong>
           </span>

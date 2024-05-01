@@ -195,8 +195,9 @@ body{
 
 
 /* Top Bar Animation */
+/* Top Bar Animation */
 .marquee-div {
-  animation: marquee 60s linear infinite;
+  animation: marquee 70s linear infinite;
 }
 
 @keyframes marquee {
@@ -205,6 +206,55 @@ body{
   }
   100% {
     transform: translateX(-380%);
+  }
+}
+
+/* Media Queries */
+@media screen and (max-width: 1024px) {
+  .marquee-div {
+    /* Adjust animation properties for smaller screens */
+    animation: marquee-medium 50s linear infinite;
+  }
+  
+  @keyframes marquee-medium {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-300%);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .marquee-div {
+    /* Adjust animation properties for even smaller screens */
+    animation: marquee-small 60s linear infinite;
+  }
+  
+  @keyframes marquee-small {
+    0% {
+      transform: translateX(120%);
+    }
+    100% {
+      transform: translateX(-980%);
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .marquee-div {
+    /* Adjust animation properties for the smallest screens */
+    animation: marquee-extra-small 60s linear infinite;
+  }
+  
+  @keyframes marquee-extra-small {
+    0% {
+      transform: translateX(180%);
+    }
+    100% {
+      transform: translateX(-1600%);
+    }
   }
 }
 
