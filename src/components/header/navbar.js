@@ -42,7 +42,7 @@ const Navbar = () => {
           <li>
             <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw]"
-              href="#"
+              to={"/"}
             >
               Home
             </NavLink>
@@ -50,7 +50,7 @@ const Navbar = () => {
           <li>
             <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw]"
-              href="#"
+              to={"/about"}
             >
               About Us
             </NavLink>

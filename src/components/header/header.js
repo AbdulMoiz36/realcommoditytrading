@@ -33,14 +33,14 @@ const Header = () => {
 
       <div className="bg-green-600 text-white grid gap-3 p-2 px-[5%] grid-cols-1 md:grid-cols-3">
         <div className=" mx-auto text-center flex items-center">
-          <p className="font-bold text-lg quick-guide">Quick Guide</p>
+          <p className="font-bold text-md quick-guide">Quick Guide</p>
         </div>
 
         <div className="col-span-full md:col-span-1 ">
           <input
             type="text"
             placeholder="Search..."
-            className="w-full bg-transparent border border-white placeholder:text-gray-200 focus:outline-yellow-300 p-3"
+            className="w-full bg-transparent border border-white placeholder:text-gray-200 focus:outline-yellow-300 px-3 py-1"
           />
         </div>
 
