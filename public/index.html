@@ -15,18 +15,24 @@
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
-      function googleTranslateElementInit() {
-      
-        // Create a new translation widget instance with English as the default language
-        new google.translate.TranslateElement(
-          {
-            pageLanguage: 'english',
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE 
-          },
-          'google_translate_element'
-        );
-      }
-      </script>
+      // Attach an event listener to the window object for the 'load' event
+      window.addEventListener('load', function() {
+        // Function to initialize Google Translate widget
+        function googleTranslateElementInit() {
+          // Create a new translation widget instance with English as the default language
+          new google.translate.TranslateElement(
+            {
+              pageLanguage: 'english',
+              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE 
+            },
+            'google_translate_element'
+          );
+        }
+    
+        // Call the googleTranslateElementInit function when the entire website is loaded
+        googleTranslateElementInit();
+      });
+    </script>
   </head>
   <body>
     
