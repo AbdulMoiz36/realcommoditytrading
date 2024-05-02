@@ -53,11 +53,11 @@
     background-color: rgb(191, 15, 2);
 }
   .btn-green{
-    background-color: rgb(0, 232, 4);
+    background-color: rgb(33, 173, 40);
   }
 
   .btn-green:hover{
-    background-color: rgb(43, 191, 2);
+    background-color: rgb(69, 192, 35);
 }
   .btn-blue{
     background-color: rgb(37, 101, 239);

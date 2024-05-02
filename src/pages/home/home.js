@@ -211,7 +211,7 @@ const Home = () => {
       {/* Banner */}
       <div className="banner h-[80vh] w-full flex justify-center items-center">
         <div className="text-white flex flex-col justify-center items-start mx-8 md:mx-28 lg:pr-[30%] gap-8 ">
-          <h2 className="font-bold text-4xl md:text-6xl ">
+          <h2 className="font-bold text-4xl ">
             Global Partners Network for Commodity Trading Business
           </h2>
           <h4 className="font-semibold text-lg">
