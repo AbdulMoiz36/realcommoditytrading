@@ -4,14 +4,14 @@ import Header from './components/header/header';
 import Home from './pages/home/home';
 import { Footer } from './components/footer/footer';
 import Login from './pages/auth/login';
-import Signup from './pages/auth/signup';
+import Register from './pages/auth/register';
 const App = () => {
   return (
     <Router>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>
         <Footer/>

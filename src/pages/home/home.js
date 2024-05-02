@@ -226,7 +226,7 @@ const Home = () => {
         </div>
       </div>
       {/* Verified Offers Section */}
-      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-36 lg:my-24">
+      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-28 my-24">
         <div className="verified-offers md:w-2/6 md:mr-4 mb-4 md:mb-0">
           <div className="bg-blue-500 rounded-t-lg py-8">
             <h2 className="font-semibold text-white lg:text-5xl md:text-4xl text-4xl text-center md:text-left lg:px-8 md:px-6">
@@ -253,7 +253,7 @@ const Home = () => {
         </div>
       </div>
       {/* Offers Section */}
-      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-36 lg:my-24">
+      <div className="flex flex-col md:flex-row justify-between mx-4 md:mx-16 lg:mx-28 my-24">
         <div className="verified-offers md:w-2/6 md:mr-4  md:mb-0">
           <div className="bg-green-500 rounded-t-lg py-8">
             <h2 className="font-semibold text-white lg:text-5xl md:text-4xl text-4xl text-center md:text-left lg:px-8 md:px-6">

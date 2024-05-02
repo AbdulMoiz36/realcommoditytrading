@@ -195,7 +195,6 @@ body{
 
 
 /* Top Bar Animation */
-/* Top Bar Animation */
 .marquee-div {
   animation: marquee 70s linear infinite;
 }
