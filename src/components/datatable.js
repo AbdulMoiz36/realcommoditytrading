@@ -134,7 +134,7 @@ const DataTable = ({ columns, data, color }) => {
           <span>
             Page
             <strong>
-              <span className={`text-${color}-600`}>{pageIndex + 1}</span> of
+              <span className={`text-${color}-600`}> {pageIndex + 1}</span> of{" "}
               {totalPages}
             </strong>
           </span>

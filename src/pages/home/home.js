@@ -248,7 +248,7 @@ const Home = () => {
             </NavLink>
           </div>
         </div>
-        <div className="overflow-x-auto rounded-t-2xl w-full">
+        <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
           <DataTable columns={columns} data={vOffers} color={"blue"} />
         </div>
       </div>
@@ -274,7 +274,7 @@ const Home = () => {
             </NavLink>
           </div>
         </div>
-        <div className="overflow-x-auto rounded-t-2xl w-full">
+        <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
           <DataTable columns={columns} data={vOffers} color={"green"} />
         </div>
       </div>

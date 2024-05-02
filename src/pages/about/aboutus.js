@@ -20,15 +20,16 @@ const Aboutus = () => {
           <Button text="Join Us As A Partner" color="yellow" link="/#" />
         </div>
       </div>
-      <section class="text-gray-600 body-font overflow-hidden">
-        <div class="container px-5 py-24 mx-auto">
-          <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      {/* Sections */}
+      <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="lg:w-4/5 mx-auto flex flex-wrap">
             <img
               alt="about"
-              class="lg:w-1/2 w-full lg:h-auto md:h-64 h-24 object-cover md:object-top lg:object-center rounded"
+              className="lg:w-1/2 w-1/2 mx-auto lg:h-auto md:h-64 object-cover object-center rounded"
               src={about1}
             />
-            <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center justify-around">
+            <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center gap-10 justify-center">
               <h2 className="text-green-600 font-bold text-3xl ">
                 Who we are
               </h2>
@@ -42,25 +43,25 @@ const Aboutus = () => {
                 involved. This trading powerhouse will open up endless
                 possibilities for you!
               </p>
-              <Button text="Join Us As A Partner" color="green" link="/#" />
+              <Button text="Request a Verified Offer Post" color="green" link="/#" />
             </div>
           </div>
         </div>
       </section>
       {/* Second */}
-      <section class="text-gray-600 body-font overflow-hidden">
-        <div class="container px-5 py-24 mx-auto">
-          <div class="lg:w-4/5 mx-auto flex flex-wrap ">
+      <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="lg:w-4/5 mx-auto flex flex-wrap ">
             <img
               alt="about"
-              class="lg:w-1/2 w-full h-auto  object-cover object-center rounded order-2"
+              className="lg:w-1/2 w-1/2 mx-auto lg:h-auto md:h-64 object-cover object-center rounded md:order-2"
               src={about2}
             />
-            <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center justify-around order-1">
-              <h2 className="text-blue-600 font-bold text-3xl ">
+            <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center justify-center md:order-1">
+              <h2 className="text-blue-600 font-bold text-3xl text-center ">
                 How we help our members
               </h2>
-              <p>
+              <p className="my-12">
                 Our vast professional network gives our members access to
                 reliable business partners. They can safely invest in various
                 commodities, allowing them to amplify their success without
@@ -69,25 +70,25 @@ const Aboutus = () => {
                 business needs - check out our website today and find the
                 perfect solution!
               </p>
-              <Button text="Join Us As A Partner" color="blue" link="/#" />
+              <Button text="Request a Verified Offer Post" color="blue" link="/#" />
             </div>
           </div>
         </div>
       </section>
       {/* Third */}
-      <section class="text-gray-600 body-font overflow-hidden">
-        <div class="container px-5 py-24 mx-auto">
-          <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="lg:w-4/5 mx-auto flex flex-wrap">
             <img
               alt="about"
-              class="lg:w-1/2 w-full h-auto  object-cover object-center rounded"
+              className="lg:w-1/2 w-1/2 mx-auto lg:h-auto md:h-64 object-cover object-center rounded"
               src={about3}
             />
-            <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center justify-around">
+            <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 flex flex-col items-center justify-center">
               <h2 className="text-yellow-500 font-bold text-3xl ">
                 How It Works
               </h2>
-              <p>
+              <p className="my-12">
                 Navigating the commodity trading market can be challenging due
                 to time and risk management. That's why we're here! Our teams of
                 partners bring buyers, sellers, financiers, and verified offers
@@ -100,7 +101,7 @@ const Aboutus = () => {
                 must provide us Previous Record, Proof of Product, or Proof of
                 Fund before further communication takes off!
               </p>
-              <Button text="Join Us As A Partner" color="yellow" link="/#" />
+              <Button text="Request a Verified Offer Post" color="yellow" link="/#" />
             </div>
           </div>
         </div>
