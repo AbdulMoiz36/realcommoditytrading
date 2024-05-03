@@ -1,30 +1,80 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate(); // Import useNavigate hook
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:9001/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.msg || "Failed to login");
+      }
+      // Show success toast message
+      toast.success("Login Successful, Redirecting..");
+      // Set user ID and token in session storage
+      sessionStorage.setItem("userId", data.userId);
+      sessionStorage.setItem("token", data.token);
+      // Clear input fields
+      setEmail("");
+      setPassword("");
+      // Redirect to homepage after a delay
+      setTimeout(() => {
+        navigate("/");
+      }, 2500); // Adjust the delay as needed
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+      // Show error toast message
+      toast.error("Failed to Login");
+    }
+  };
+
   return (
     <div className="w-full flex justify-center items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="light"
+      />
       <div className="lg:p-10 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-5/6 md:w-4/6 lg:w-3/6 flex flex-col items-center gap-10">
         <div>
           <h1 className="text-center text-4xl font-bold mb-3">Login</h1>
           <p>
             Don't have an account?{" "}
             <NavLink to={"/register"}>
-              <span className="text-green-600 ml-1 font-semibold underline">Register</span>
+              <span className="text-green-600 ml-1 font-semibold underline">
+                Register
+              </span>
             </NavLink>
           </p>
         </div>
         <div>
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <input
               type="email"
               id="email"
@@ -53,15 +103,6 @@ const Login = () => {
                   onClick={togglePasswordVisibility}
                 />
               )}
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember-me"
-                name="remember"
-                className="mr-2 h-4 w-4 accent-lime-500"
-              />
-              <label htmlFor="remember-me">Remember Me</label>
             </div>
             <button
               type="submit"

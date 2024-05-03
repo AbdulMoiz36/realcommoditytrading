@@ -1,17 +1,57 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+  });
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:9001/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData), 
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create user!');
+      } else {
+        console.log('User created successfully');
+        toast.success('Registered successfully!');
+        setFormData({
+          email: '',
+          password: '',
+          confirmPassword: '',
+          firstName: '',
+          lastName: '',
+        });
+      }
+    } catch (error) {
+      console.error('Error creating user:', error.message);
+      toast.error('Failed to Register');
+    }
+  };
+  
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -27,23 +67,25 @@ const Register = () => {
           </p>
         </div>
         <div>
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <input
               type="email"
               id="email"
+              name="email"
               placeholder="Email"
               className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-72 md:w-96"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
             />
             <div className="relative">
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
+                name="password"
                 placeholder="Password"
                 className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md pr-12 w-72 md:w-96"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
               {passwordVisible ? (
                 <FaEyeSlash
@@ -60,33 +102,35 @@ const Register = () => {
             <input
               type="password"
               id="confirm-password"
+              name="confirmPassword"
               placeholder="Confirm Password"
               className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-72 md:w-96"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={formData.confirmPassword}
+              onChange={handleChange}
             />
             <input
               type="text"
               id="first-name"
+              name="firstName"
               placeholder="First Name"
               className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-72 md:w-96"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={formData.firstName}
+              onChange={handleChange}
             />
             <input
               type="text"
               id="last-name"
+              name="lastName"
               placeholder="Last Name"
               className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-72 md:w-96"
-
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={formData.lastName}
+              onChange={handleChange}
             />
             <div className="flex items-center w-72 md:w-96">
               <input
                 type="checkbox"
                 id="agree-terms"
-                name="agree-terms"
+                name="agreeTerms"
                 className="mr-2 h-4 w-4 accent-lime-500"
               />
               <label htmlFor="agree-terms" className="text-sm">While creating a website account: I agree to abide by the realcommoditytrading.com <NavLink><span className="font-bold">Member Agreement</span></NavLink> - Willing to receive emails from realcommoditytrading.com</label>
@@ -102,6 +146,7 @@ const Register = () => {
         <div>
           <p className="text-lg">Or</p>
         </div>
+        <ToastContainer />
       </div>
     </div>
   );
