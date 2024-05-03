@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
@@ -26,13 +26,32 @@ const Register = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), 
+        body: JSON.stringify(formData),
       });
       if (!response.ok) {
         throw new Error('Failed to create user!');
       } else {
-        console.log('User created successfully');
-        toast.success('Registered successfully!');
+        // Registration successful, now log in the user
+        const loginResponse = await fetch('http://localhost:9001/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+        const loginData = await loginResponse.json();
+        if (!loginResponse.ok) {
+          throw new Error(loginData.msg || 'Failed to login');
+        }
+        // Show success toast message
+        toast.success('Registered and logged in successfully!');
+        // Set user ID and token in session storage
+        sessionStorage.setItem('userId', loginData.userId);
+        sessionStorage.setItem('token', loginData.token);
+        // Clear the form data
         setFormData({
           email: '',
           password: '',
@@ -46,6 +65,7 @@ const Register = () => {
       toast.error('Failed to Register');
     }
   };
+  
   
   const handleChange = (e) => {
     setFormData({
@@ -146,7 +166,6 @@ const Register = () => {
         <div>
           <p className="text-lg">Or</p>
         </div>
-        <ToastContainer />
       </div>
     </div>
   );

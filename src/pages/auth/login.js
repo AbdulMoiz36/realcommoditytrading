@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
@@ -29,17 +29,15 @@ const Login = () => {
         throw new Error(data.msg || "Failed to login");
       }
       // Show success toast message
-      toast.success("Login Successful, Redirecting..");
+      toast.success("Login Successful");
       // Set user ID and token in session storage
       sessionStorage.setItem("userId", data.userId);
       sessionStorage.setItem("token", data.token);
       // Clear input fields
       setEmail("");
       setPassword("");
-      // Redirect to homepage after a delay
-      setTimeout(() => {
-        navigate("/");
-      }, 2500); // Adjust the delay as needed
+      navigate("/");
+      
     } catch (error) {
       console.error("Error logging in:", error.message);
       // Show error toast message
@@ -49,18 +47,6 @@ const Login = () => {
 
   return (
     <div className="w-full flex justify-center items-center">
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"
-      />
       <div className="lg:p-10 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-5/6 md:w-4/6 lg:w-3/6 flex flex-col items-center gap-10">
         <div>
           <h1 className="text-center text-4xl font-bold mb-3">Login</h1>
