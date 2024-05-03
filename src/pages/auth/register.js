@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate(); // Get the navigate function
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,29 +29,12 @@ const Register = () => {
         },
         body: JSON.stringify(formData),
       });
+      const responseData = await response.json();
       if (!response.ok) {
-        throw new Error('Failed to create user!');
+        throw new Error(responseData.msg || 'Failed to create user!');
       } else {
-        // Registration successful, now log in the user
-        const loginResponse = await fetch('https://realcommoditytradingbackend.vercel.app/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
-        const loginData = await loginResponse.json();
-        if (!loginResponse.ok) {
-          throw new Error(loginData.msg || 'Failed to login');
-        }
         // Show success toast message
-        toast.success('Registered and logged in successfully!');
-        // Set user ID and token in session storage
-        sessionStorage.setItem('userId', loginData.userId);
-        sessionStorage.setItem('token', loginData.token);
+        toast.success('Registered successfully!');
         // Clear the form data
         setFormData({
           email: '',
@@ -59,10 +43,12 @@ const Register = () => {
           firstName: '',
           lastName: '',
         });
+        // Redirect to the login page
+        navigate('/login');
       }
     } catch (error) {
       console.error('Error creating user:', error.message);
-      toast.error('Failed to Register');
+      toast.error(error.message);
     }
   };
   

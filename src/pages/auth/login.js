@@ -3,12 +3,15 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUser } from '../../context/userProvider';
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const { setUserName } = useUser();
   const navigate = useNavigate(); // Import useNavigate hook
+  const [errorMessage, setErrorMessage] = useState(""); // State to hold error message
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -36,12 +39,27 @@ const Login = () => {
       // Clear input fields
       setEmail("");
       setPassword("");
+      // Fetch user data using the stored user ID
+      const userId = data.userId;
+      if (userId) {
+        fetch(`https://realcommoditytradingbackend.vercel.app/users/${userId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Set the user's first name
+            setUserName(data.first_name);
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          });
+      }
       navigate("/");
-      
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error("Error logging in:", error.message);
       // Show error toast message
-      toast.error("Failed to Login");
+      toast.error(error.message || "Failed to Login");
+      // Set error message received from the server
+      setErrorMessage(error.message || "Failed to login");
     }
   };
 
@@ -90,6 +108,7 @@ const Login = () => {
                 />
               )}
             </div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
             <button
               type="submit"
               className="px-5 py-4 text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl "

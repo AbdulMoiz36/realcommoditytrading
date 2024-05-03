@@ -6,13 +6,14 @@ import { IoPersonCircleSharp } from "react-icons/io5";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useUser } from '../../context/userProvider';
 
 const Header = () => {
   const [topBarData, setTopBarData] = useState([]);
-  const [userName, setUserName] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const navigate = useNavigate(); // Get the navigate function
-
+  const { userName,setUserName } = useUser();
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,23 +26,12 @@ const Header = () => {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
-
-    // Fetch user data using the stored user ID
-    const userId = sessionStorage.getItem("userId");
-    if (userId) {
-      fetch(`https://realcommoditytradingbackend.vercel.app/users/${userId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          // Set the user's first name
-          setUserName(data.first_name);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
+  
   }, []);
+  
+  
 
   const handleLogout = () => {
     // Show confirmation modal
@@ -54,6 +44,7 @@ const Header = () => {
     sessionStorage.removeItem("token");
     // Hide modal
     setShowModal(false);
+    setUserName("");
     // Redirect to homepage
     navigate("/");
     // Show toast
@@ -90,18 +81,18 @@ const Header = () => {
 
         <div className="mx-auto text-center grid grid-cols-2 place-items-center">
             {sessionStorage.getItem("userId") ? (
-              <div className="flex flex-row items-center gap-1 cursor-pointer py-">
-              <IoPersonCircleSharp className="text-xl"/>
               <ul className="navigation-list">
                 <li>
+                <div className="flex flex-row items-center gap-1 cursor-pointer py-">
+                <IoPersonCircleSharp className="text-xl"/>
                 <p className="capitalize">{userName}</p>
                   <ul className="z-50 text-black ">
                     <li onClick={handleLogout}>Logout</li> {/* Add onClick event to handleLogout */}
                   </ul>
-                </li>
-              </ul>
               <IoMdArrowDropdown className="mt-1"/>
               </div>
+                </li>
+              </ul>
             ) : (
               <NavLink to="/login">
               <p>Login/Register</p>
