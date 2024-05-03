@@ -21,7 +21,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:9001/users/register', {
+      const response = await fetch('https://realcommoditytradingbackend.vercel.app/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const Register = () => {
         throw new Error('Failed to create user!');
       } else {
         // Registration successful, now log in the user
-        const loginResponse = await fetch('http://localhost:9001/users/login', {
+        const loginResponse = await fetch('https://realcommoditytradingbackend.vercel.app/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

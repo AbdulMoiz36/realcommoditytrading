@@ -31,7 +31,7 @@ const Header = () => {
     // Fetch user data using the stored user ID
     const userId = sessionStorage.getItem("userId");
     if (userId) {
-      fetch(`http://localhost:9001/users/${userId}`)
+      fetch(`https://realcommoditytradingbackend.vercel.app/users/${userId}`)
         .then((response) => response.json())
         .then((data) => {
           // Set the user's first name
