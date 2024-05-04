@@ -9,6 +9,7 @@ const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const userId = sessionStorage.getItem('userId');
   const { setUserName } = useUser();
   const navigate = useNavigate(); // Import useNavigate hook
   const [errorMessage, setErrorMessage] = useState(""); // State to hold error message
@@ -20,6 +21,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Check if email and password are not empty
+      if (!email.trim() || !password.trim()) {
+        throw new Error("Email and password are required");
+      }
+  
+      // Proceed with login process
       const response = await fetch("https://realcommoditytradingbackend.vercel.app/users/login", {
         method: "POST",
         headers: {
@@ -62,6 +69,18 @@ const Login = () => {
       setErrorMessage(error.message || "Failed to login");
     }
   };
+  
+  
+    // Render the registration form only if the userId is not stored in the session
+    if (userId) {
+      return (
+        <div className="w-full flex justify-center items-center">
+          <div className="lg:p-20 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-6/6 md:w-4/6 lg:w-3/6 flex flex-col items-center gap-10">
+            <h1 className="text-center text-red-500 text-4xl font-bold mb-3">Please Logout First!</h1>
+          </div>
+        </div>
+      );
+    }
 
   return (
     <div className="w-full flex justify-center items-center">
