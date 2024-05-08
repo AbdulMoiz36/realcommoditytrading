@@ -7,6 +7,7 @@ import { Footer } from './components/footer/footer';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Aboutus from './pages/about/aboutus';
+import MemberRegistration from './pages/member-registration';
 import { UserProvider } from './context/userProvider';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<Aboutus />} />
+          <Route path="/member-registration" element={<MemberRegistration />} />
         </Routes>
         <Footer/>
       </UserProvider>

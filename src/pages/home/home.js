@@ -138,21 +138,37 @@ const accordianItems = [
 
 const Home = () => {
   const [vOffers, setvOffers] = useState([]);
+  const [posts, setposts] = useState([]);
 
   useEffect(() => {
     fetchVerifiedOffers();
+    fetchPosts();
   }, []);
 
   const fetchVerifiedOffers = async () => {
     try {
       const response = await fetch(
-        "https://realcommoditytradingbackend.vercel.app/verified_offers/",
+        "https://realcommoditytradingbackend.vercel.app/verified_offers/all_data",
         {
           method: "GET",
         }
       );
       const data = await response.json();
       setvOffers(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/post/all_data",
+        {
+          method: "GET",
+        }
+      );
+      const postdata = await response.json();
+      setposts(postdata);
     } catch (error) {
       console.log(error);
     }
@@ -169,8 +185,7 @@ const Home = () => {
           <FaRegHeart className="mx-auto" />
         </div>
       ),
-      accessor: "h",
-      Cell: () => "hello",
+      accessor: "totalLikes",
     },
     {
       Header: () => (
@@ -178,8 +193,7 @@ const Home = () => {
           <FaRegCommentAlt className="mx-auto" />
         </div>
       ),
-      accessor: "hw",
-      Cell: () => "Hello",
+      accessor: "totalComments",
     },
     {
       Header: () => (
@@ -192,6 +206,51 @@ const Home = () => {
     {
       Header: "Type",
       accessor: "offer_type",
+    },
+    {
+      Header: "Offer Date",
+      accessor: "created_at",
+      Cell: ({ value }) => {
+        const date = new Date(value);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear().toString().slice(-2);
+        return `${day}-${month}-${year}`;
+      },
+    },
+  ];
+  const postColumns = [
+    {
+      Header: "Title",
+      accessor: "post_title",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegHeart className="mx-auto" />
+        </div>
+      ),
+      accessor: "totalLikes",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegCommentAlt className="mx-auto" />
+        </div>
+      ),
+      accessor: "totalComments",
+    },
+    {
+      Header: () => (
+        <div>
+          <FaRegEye className="mx-auto" />
+        </div>
+      ),
+      accessor: "post_visitors_count",
+    },
+    {
+      Header: "Type",
+      accessor: "offer_status",
     },
     {
       Header: "Offer Date",
@@ -219,7 +278,7 @@ const Home = () => {
             of partners for companies who request us with Previous Records,
             Proof of Products or Funds.
           </h4>
-          <Button text="Join Us As A Partner" color="yellow" link="/#" />
+          <Button text="Join Us As A Partner" color="yellow" link="/member-registration" />
           <p className="font-bold quick-guide">
             Win $100,00 <NavLink href="#"> Find More &gt;</NavLink>
           </p>
@@ -275,7 +334,7 @@ const Home = () => {
           </div>
         </div>
         <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
-          <DataTable columns={columns} data={vOffers} color={"green"} />
+          <DataTable columns={postColumns} data={posts} color={"green"} />
         </div>
       </div>
 

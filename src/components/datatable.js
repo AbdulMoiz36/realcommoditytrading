@@ -34,18 +34,17 @@ const DataTable = ({ columns, data, color }) => {
   const totalPages = Math.ceil(data.length / pageSize);
 
   // Function to get the text color based on the type
-  const getTextColor = (type) => {
-    switch (type) {
-      case "buyer":
-        return "#001fe7";
-      case "seller":
-        return "red";
-      case "finance":
-        return "green";
-      case "announcement":
-        return "black";
-      default:
-        return "inherit";
+  const getTextColor = (offerType, offerStatus) => {
+    if (offerType === "buyer" || offerStatus === "buyer") {
+      return "#001fe7"; // blue for buyer
+    } else if (offerType === "seller" || offerStatus === "seller") {
+      return "red"; // red for seller
+    } else if (offerType === "finance" || offerStatus === "finance") {
+      return "green"; // green for finance
+    } else if (offerType === "announcement" || offerStatus === "announcement") {
+      return "black"; // black for announcement
+    } else {
+      return "inherit";
     }
   };
   // Set fixed widths for columns
@@ -92,7 +91,7 @@ const DataTable = ({ columns, data, color }) => {
               <tr
                 {...row.getRowProps()}
                 className="border-2"
-                style={{ color: getTextColor(row.original.offer_type) }}
+                style={{ color: getTextColor(row.original.offer_type, row.original.offer_status) }}
               >
                 {row.cells.map((cell, index) => {
                   return (
