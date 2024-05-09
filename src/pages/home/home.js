@@ -278,7 +278,7 @@ const Home = () => {
             of partners for companies who request us with Previous Records,
             Proof of Products or Funds.
           </h4>
-          <Button text="Join Us As A Partner" color="yellow" link="/member-registration" />
+          <Button text="Join Us As A Partner" color="yellow" link="/partner-registration" />
           <p className="font-bold quick-guide">
             Win $100,00 <NavLink href="#"> Find More &gt;</NavLink>
           </p>

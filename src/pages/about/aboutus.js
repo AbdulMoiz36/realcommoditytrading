@@ -17,7 +17,7 @@ const Aboutus = () => {
             Global Intelligence Network of Commodity Trading Businesses. Create
             the Better World with Our Good Partners. Together, We are Stronger.
           </h4>
-          <Button text="Join Us As A Partner" color="yellow" link="/#" />
+          <Button text="Join Us As A Partner" color="yellow" link="/partner-registration" />
         </div>
       </div>
       {/* Sections */}
