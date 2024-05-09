@@ -139,6 +139,12 @@ const Login = () => {
         <div>
           <p className="text-lg">Or</p>
         </div>
+        <button
+              type="submit"
+              className="px-5 py-4 text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl "
+            >
+              Sign In
+            </button>
       </div>
     </div>
   );
