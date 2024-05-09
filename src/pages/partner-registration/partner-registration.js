@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
+import "./partner-registration.css";
 const MemberRegistration = () => {
   const [companyName, setCompanyName] = useState("");
   const [companyWebsite, setCompanyWebsite] = useState("");
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
   const [companyRegistrationCopy, setCompanyRegistrationCopy] = useState(null);
   const [passportCopy, setPassportCopy] = useState(null);
   const [mobileNumber, setMobileNumber] = useState("");
@@ -31,6 +33,59 @@ const MemberRegistration = () => {
   const [resume, setResume] = useState(null);
   const [profile, setProfile] = useState(null);
 
+  const [categories, setCategories] = useState([]);
+  const [categoryData, setCategoryData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:9001/categories/parent/0"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setCategories(data);
+
+        // Fetch data for each category
+        const dataPromises = data.map(async (category) => {
+          const response = await fetch(
+            `http://localhost:9001/categories/parent/${category.id}`
+          );
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch data for category ${category._id}`
+            );
+          }
+          const categoryData = await response.json();
+          return { categoryId: category._id, data: categoryData };
+        });
+
+        // Wait for all data to be fetched
+        const resolvedData = await Promise.all(dataPromises);
+
+        // Organize fetched data into an object
+        const dataObject = {};
+        resolvedData.forEach(({ categoryId, data }) => {
+          dataObject[categoryId] = data;
+        });
+        setCategoryData(dataObject);
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle error, show error message or retry logic
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [expandedCategory, setExpandedCategory] = useState(null);
+
+  const toggleCategory = (categoryId) => {
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
@@ -40,18 +95,21 @@ const MemberRegistration = () => {
     <div className="w-full flex justify-center items-center">
       <div className="lg:p-10 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-6/6 md:w-5/6 lg:w-4/6 flex flex-col items-center gap-10">
         <div>
-          <h1 className="text-center text-4xl font-bold mb-3">Partner Register</h1>
+          <h1 className="text-center text-4xl font-bold mb-3">
+            Partner Register
+          </h1>
         </div>
         <div>
           <form className="" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-5">
-              <label htmlFor="companyName">Company Name</label>
+              <label htmlFor="companyName">Company Name <span className="text-red-600 font-bold">*</span></label>
               <input
                 type="text"
                 id="companyName"
                 className="border"
                 placeholder="Enter Company Name"
                 value={companyName}
+                required
                 onChange={(e) => setCompanyName(e.target.value)}
               />
               <label htmlFor="companyWebsite">Company Website</label>
@@ -62,6 +120,26 @@ const MemberRegistration = () => {
                 placeholder="Enter Company Website"
                 value={companyWebsite}
                 onChange={(e) => setCompanyWebsite(e.target.value)}
+              />
+              <label htmlFor="firstname">First Name <span className="text-red-600 font-bold">*</span></label>
+              <input
+                type="text"
+                id="firstname"
+                className="border"
+                placeholder="First Name"
+                value={firstName}
+                required
+                onChange={(e) => setfirstName(e.target.value)}
+              />
+              <label htmlFor="lastname">Last Name <span className="text-red-600 font-bold">*</span></label>
+              <input
+                type="text"
+                id="lastname"
+                className="border"
+                placeholder="Last Name"
+                value={lastName}
+                required
+                onChange={(e) => setlastName(e.target.value)}
               />
               <label htmlFor="companyRegistration">
                 Upload Company Registration Copy: (Optional)
@@ -117,8 +195,7 @@ const MemberRegistration = () => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
-              
-              
+
               <label htmlFor="sns1">SNS1</label>
               <select
                 name="sns1"
@@ -166,79 +243,226 @@ const MemberRegistration = () => {
             <div>
               <h2>Please select all of your trade roles below:</h2>
               <p>Click ⮟ to open product list</p>
+              {categories.map((category) => (
+                <>
+                  <div className="flex gap-2">
+                    <p
+                      key={category._id}
+                      className="cursor-pointer font-bold text-yellow-500"
+                      onClick={() => toggleCategory(category._id)}
+                    >
+                      {category.name}
+                    </p>
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => toggleCategory(category._id)}
+                    >
+                      ⮟
+                    </span>
+                  </div>
+                  <div className="flex gap-4">
+                    <div>
+                    <input type="checkbox" name={`${category.name}_seller`} id={`${category.name}_seller`} />
+
+                      <label htmlFor={`${category.name}_seller`}>Seller</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" name={`${category.name}_buyer`} id={`${category.name}_buyer`} />
+                      <label htmlFor={`${category.name}_buyer`}>Buyer</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" name={`${category.name}_financier`} id={`${category.name}_financier`} />
+                      <label htmlFor={`${category.name}_financier`}>Financier</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${category.name}_seller_Mandate`}
+                        id={`${category.name}_seller_Mandate`}
+                      />
+                      <label htmlFor={`${category.name}_seller_Mandate`}>Seller Mandate</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${category.name}_buyer_Mandate`}
+                        id={`${category.name}_buyer_Mandate`}
+                      />
+                      <label htmlFor={`${category.name}_buyer_Mandate`}>Buyer Mandate</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${category.name}_financier_Mandate`}
+                        id={`${category.name}_financier_Mandate`}
+                      />
+                      <label htmlFor={`${category.name}_financier_Mandate`}>
+                        Financier Mandate
+                      </label>
+                    </div>
+                  </div>
+                  {expandedCategory === category._id && (
+                    <div>
+                      {/* Render fetched data here */}
+                      {categoryData[category._id]?.map((item) => (
+                        <>
+                        <div>
+                          <p
+                            key={item._id}
+                            className="font-bold"
+                            >
+                            {item.name}
+                          </p>
+                        </div>
+                        <div className="flex gap-4">
+                    <div>
+                    <input type="checkbox" name={`${item.name}_seller`} id={`${item.name}_seller`} />
+
+                      <label htmlFor={`${item.name}_seller`}>Seller</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" name={`${item.name}_buyer`} id={`${item.name}_buyer`} />
+                      <label htmlFor={`${item.name}_buyer`}>Buyer</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" name={`${item.name}_financier`} id={`${item.name}_financier`} />
+                      <label htmlFor={`${item.name}_financier`}>Financier</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${item.name}_seller_Mandate`}
+                        id={`${item.name}_seller_Mandate`}
+                      />
+                      <label htmlFor={`${item.name}_seller_Mandate`}>Seller Mandate</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${item.name}_buyer_Mandate`}
+                        id={`${item.name}_buyer_Mandate`}
+                      />
+                      <label htmlFor={`${item.name}_buyer_Mandate`}>Buyer Mandate</label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`${item.name}_financier_Mandate`}
+                        id={`${item.name}_financier_Mandate`}
+                      />
+                      <label htmlFor={`${item.name}_financier_Mandate`}>
+                        Financier Mandate
+                      </label>
+                    </div>
+                  </div>
+                            </>
+                      ))}
+                      <div className="flex flex-col">
+                        <label htmlFor="other_description">Other Product(s) Description</label>
+                        <input type="text" name="other_description" id="other_description" className="border" placeholder="Please list all the other product(s)" />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))}
             </div>
 
             <div className="flex flex-col gap-5">
               <h2>Please select all partner participation activities below</h2>
-              <div>
+              <div className="flex flex-col gap-2">
                 <label htmlFor="consultAccept">
                   Find and/or Consult with local sellers, buyers, financiers *
                 </label>
+                <div className="flex flex-row gap-1">
                 <input
                   type="radio"
                   id="consultAccept"
                   name="consult"
                   value="accept"
-                />
+                  />
+                  <span>I Accept</span>
                 <input
                   type="radio"
                   id="consultDecline"
                   name="consult"
                   value="decline"
-                />
+                  className="ml-5"
+                  />
+                  <span>No Thanks</span>
+                  </div>
               </div>
-              <div>
-                <label htmlFor="inspectionAccept">
-                  Working with Inspection Agency at the Port *
-                </label>
-                <input
-                  type="radio"
-                  id="inspectionAccept"
-                  name="inspection"
-                  value="accept"
-                />
-                <input
-                  type="radio"
-                  id="inspectionDecline"
-                  name="inspection"
-                  value="decline"
-                />
-              </div>
-              <div>
-                <label htmlFor="shippingAccept">
-                  Working with Shipping Agency for the Export, Import Process *
-                </label>
-                <input
-                  type="radio"
-                  id="shippingAccept"
-                  name="shipping"
-                  value="accept"
-                />
-                <input
-                  type="radio"
-                  id="shippingDecline"
-                  name="shipping"
-                  value="decline"
-                />
-              </div>
-              <div>
-                <label htmlFor="newsAccept">
-                  Upload the News and Rank the member’s postings on our website
-                  *
-                </label>
-                <input
-                  type="radio"
-                  id="newsAccept"
-                  name="news"
-                  value="accept"
-                />
-                <input
-                  type="radio"
-                  id="newsDecline"
-                  name="news"
-                  value="decline"
-                />
-              </div>
+              <div className="flex flex-col gap-2">
+    <label htmlFor="inspectionAccept">
+        Working with Inspection Agency at the Port *
+    </label>
+    <div className="flex flex-row gap-1">
+        <input
+            type="radio"
+            id="inspectionAccept"
+            name="inspection"
+            value="accept"
+        />
+                  <span>I Accept</span>
+
+        <input
+            type="radio"
+            id="inspectionDecline"
+            name="inspection"
+            value="decline"
+            className="ml-5"
+        />
+                  <span>No Thanks</span>
+
+    </div>
+</div>
+<div className="flex flex-col gap-2">
+    <label htmlFor="shippingAccept">
+        Working with Shipping Agency for the Export, Import Process *
+    </label>
+    <div className="flex flex-row gap-1">
+        <input
+            type="radio"
+            id="shippingAccept"
+            name="shipping"
+            value="accept"
+        />
+                  <span>I Accept</span>
+
+        <input
+            type="radio"
+            id="shippingDecline"
+            name="shipping"
+            value="decline"
+            className="ml-5"
+        />
+                  <span>No Thanks</span>
+
+    </div>
+</div>
+<div className="flex flex-col gap-2">
+    <label htmlFor="newsAccept">
+        Upload the News and Rank the member’s postings on our website *
+    </label>
+    <div className="flex flex-row gap-1">
+        <input
+            type="radio"
+            id="newsAccept"
+            name="news"
+            value="accept"
+        />
+                  <span>I Accept</span>
+
+        <input
+            type="radio"
+            id="newsDecline"
+            name="news"
+            value="decline"
+            className="ml-5"
+        />
+                  <span>No Thanks</span>
+
+    </div>
+</div>
             </div>
 
             <div className="flex flex-col gap-5">
@@ -380,9 +604,7 @@ const MemberRegistration = () => {
                 value={correspondentBankName}
                 onChange={(e) => setCorrespondentBankName(e.target.value)}
               />
-              <label htmlFor="correspondentBicCode">
-                 BIC/SWIFT Code
-              </label>
+              <label htmlFor="correspondentBicCode">BIC/SWIFT Code</label>
               <input
                 type="text"
                 id="correspondentBicCode"

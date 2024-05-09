@@ -8,7 +8,7 @@ import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Aboutus from './pages/about/aboutus';
 import MemberRegistration from './pages/member-registration';
-import PartnerRegistration from './pages/partner-registration';
+import PartnerRegistration from './pages/partner-registration/partner-registration';
 import { UserProvider } from './context/userProvider';
 
 const App = () => {
