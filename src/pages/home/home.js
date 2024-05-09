@@ -17,6 +17,7 @@ const accordianItems = [
     content: (
       <>
         <p>
+          display flex
           Our Partners have the opportunity to earn up to U$10,000 in credit*
           for each verified seller, buyer, or financier registration they
           complete. All associated documents, such as Previous Records, Proof of
