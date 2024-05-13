@@ -21,18 +21,19 @@
         function initTranslateWithDelay() {
           // Function to initialize Google Translate widget
           function googleTranslateElementInit() {
-            // Create a new translation widget instance with English as the default language
+            // Create a new translation widget instance with limited language options
             new google.translate.TranslateElement(
               {
                 pageLanguage: 'english',
+                includedLanguages: 'ar,zh-CN,zh-TW,en,eo,de,hi,id,ja,ko,la,pt,ru,es,th,tr,vi',
                 layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE 
               },
               'google_translate_element'
             );
           }
     
-          // Call the googleTranslateElementInit function after a delay of 2000 milliseconds (2 seconds)
-          setTimeout(googleTranslateElementInit, 3000);
+          // Call the googleTranslateElementInit function after a delay of 3000 milliseconds (3 seconds)
+          setTimeout(googleTranslateElementInit, 1000);
         }
     
         // Call the initTranslateWithDelay function when the entire website is loaded
@@ -44,6 +45,7 @@
   </head>
   <body>
     <div id="root"></div> 
+    <!-- ChatBot -->
     <script async data-id="5619856692" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
   </body>
 </html>

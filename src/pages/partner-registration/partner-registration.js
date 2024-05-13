@@ -102,7 +102,9 @@ const MemberRegistration = () => {
         <div>
           <form className="" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-5">
-              <label htmlFor="companyName">Company Name <span className="text-red-600 font-bold">*</span></label>
+              <label htmlFor="companyName">
+                Company Name <span className="text-red-600 font-bold">*</span>
+              </label>
               <input
                 type="text"
                 id="companyName"
@@ -121,7 +123,9 @@ const MemberRegistration = () => {
                 value={companyWebsite}
                 onChange={(e) => setCompanyWebsite(e.target.value)}
               />
-              <label htmlFor="firstname">First Name <span className="text-red-600 font-bold">*</span></label>
+              <label htmlFor="firstname">
+                First Name <span className="text-red-600 font-bold">*</span>
+              </label>
               <input
                 type="text"
                 id="firstname"
@@ -131,7 +135,9 @@ const MemberRegistration = () => {
                 required
                 onChange={(e) => setfirstName(e.target.value)}
               />
-              <label htmlFor="lastname">Last Name <span className="text-red-600 font-bold">*</span></label>
+              <label htmlFor="lastname">
+                Last Name <span className="text-red-600 font-bold">*</span>
+              </label>
               <input
                 type="text"
                 id="lastname"
@@ -245,9 +251,8 @@ const MemberRegistration = () => {
               <p>Click ⮟ to open product list</p>
               {categories.map((category) => (
                 <>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" key={category._id}>
                     <p
-                      key={category._id}
                       className="cursor-pointer font-bold text-yellow-500"
                       onClick={() => toggleCategory(category._id)}
                     >
@@ -262,109 +267,161 @@ const MemberRegistration = () => {
                   </div>
                   <div className="flex gap-4">
                     <div>
-                    <input type="checkbox" name={`${category.name}_seller`} id={`${category.name}_seller`} />
+                      <input
+                        type="checkbox"
+                        name={`category_${category._id}_seller`}
+                        id={`category_${category._id}_seller`}
+                      />
 
-                      <label htmlFor={`${category.name}_seller`}>Seller</label>
-                    </div>
-                    <div>
-                      <input type="checkbox" name={`${category.name}_buyer`} id={`${category.name}_buyer`} />
-                      <label htmlFor={`${category.name}_buyer`}>Buyer</label>
-                    </div>
-                    <div>
-                      <input type="checkbox" name={`${category.name}_financier`} id={`${category.name}_financier`} />
-                      <label htmlFor={`${category.name}_financier`}>Financier</label>
+                      <label htmlFor={`category_${category._id}_seller`}>
+                        Seller
+                      </label>
                     </div>
                     <div>
                       <input
                         type="checkbox"
-                        name={`${category.name}_seller_Mandate`}
-                        id={`${category.name}_seller_Mandate`}
+                        name={`category_${category._id}_buyer`}
+                        id={`category_${category._id}_buyer`}
                       />
-                      <label htmlFor={`${category.name}_seller_Mandate`}>Seller Mandate</label>
+                      <label htmlFor={`category_${category._id}_buyer`}>
+                        Buyer
+                      </label>
                     </div>
                     <div>
                       <input
                         type="checkbox"
-                        name={`${category.name}_buyer_Mandate`}
-                        id={`${category.name}_buyer_Mandate`}
+                        name={`category_${category._id}_financier`}
+                        id={`category_${category._id}_financier`}
                       />
-                      <label htmlFor={`${category.name}_buyer_Mandate`}>Buyer Mandate</label>
+                      <label htmlFor={`category_${category._id}_financier`}>
+                        Financier
+                      </label>
                     </div>
                     <div>
                       <input
                         type="checkbox"
-                        name={`${category.name}_financier_Mandate`}
-                        id={`${category.name}_financier_Mandate`}
+                        name={`category_${category._id}_seller_mendate`}
+                        id={`category_${category._id}_seller_mendate`}
                       />
-                      <label htmlFor={`${category.name}_financier_Mandate`}>
+                      <label
+                        htmlFor={`category_${category._id}_seller_mendate`}
+                      >
+                        Seller Mandate
+                      </label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`category_${category._id}_buyer_mendate`}
+                        id={`category_${category._id}_buyer_mendate`}
+                      />
+                      <label htmlFor={`category_${category._id}_buyer_mendate`}>
+                        Buyer Mandate
+                      </label>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name={`category_${category._id}_financier_mendate`}
+                        id={`category_${category._id}_financier_mendate`}
+                      />
+                      <label
+                        htmlFor={`category_${category._id}_financier_mendate`}
+                      >
                         Financier Mandate
                       </label>
                     </div>
                   </div>
                   {expandedCategory === category._id && (
-                    <div>
-                      {/* Render fetched data here */}
+                    <>
                       {categoryData[category._id]?.map((item) => (
-                        <>
-                        <div>
-                          <p
-                            key={item._id}
-                            className="font-bold"
-                            >
-                            {item.name}
-                          </p>
-                        </div>
-                        <div className="flex gap-4">
-                    <div>
-                    <input type="checkbox" name={`${item.name}_seller`} id={`${item.name}_seller`} />
+                        <div key={item._id}>
+                          <div>
+                            <p className="font-bold" key={item._id}>
+                              {item.name}
+                            </p>
+                          </div>
+                          <div className="flex gap-4">
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_seller`}
+                                id={`item_${item._id}_seller`}
+                              />
 
-                      <label htmlFor={`${item.name}_seller`}>Seller</label>
-                    </div>
-                    <div>
-                      <input type="checkbox" name={`${item.name}_buyer`} id={`${item.name}_buyer`} />
-                      <label htmlFor={`${item.name}_buyer`}>Buyer</label>
-                    </div>
-                    <div>
-                      <input type="checkbox" name={`${item.name}_financier`} id={`${item.name}_financier`} />
-                      <label htmlFor={`${item.name}_financier`}>Financier</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`${item.name}_seller_Mandate`}
-                        id={`${item.name}_seller_Mandate`}
-                      />
-                      <label htmlFor={`${item.name}_seller_Mandate`}>Seller Mandate</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`${item.name}_buyer_Mandate`}
-                        id={`${item.name}_buyer_Mandate`}
-                      />
-                      <label htmlFor={`${item.name}_buyer_Mandate`}>Buyer Mandate</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`${item.name}_financier_Mandate`}
-                        id={`${item.name}_financier_Mandate`}
-                      />
-                      <label htmlFor={`${item.name}_financier_Mandate`}>
-                        Financier Mandate
-                      </label>
-                    </div>
-                  </div>
-                            </>
+                              <label htmlFor={`item_${item._id}_seller`}>
+                                Seller
+                              </label>
+                            </div>
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_buyer`}
+                                id={`item_${item._id}_buyer`}
+                              />
+                              <label htmlFor={`item_${item._id}_buyer`}>
+                                Buyer
+                              </label>
+                            </div>
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_financier`}
+                                id={`item_${item._id}_financier`}
+                              />
+                              <label htmlFor={`item_${item._id}_financier`}>
+                                Financier
+                              </label>
+                            </div>
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_seller_mendate`}
+                                id={`item_${item._id}_seller_mendate`}
+                              />
+                              <label htmlFor={`item_${item._id}_seller_mendate`}>
+                                Seller Mandate
+                              </label>
+                            </div>
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_buyer_mendate`}
+                                id={`item_${item._id}_buyer_mendate`}
+                              />
+                              <label htmlFor={`item_${item._id}_buyer_mendate`}>
+                                Buyer Mandate
+                              </label>
+                            </div>
+                            <div>
+                              <input
+                                type="checkbox"
+                                name={`item_${item._id}_financier_mendate`}
+                                id={`item_${item._id}_financier_mendate`}
+                              />
+                              <label htmlFor={`item_${item._id}_se_financier_mendateller`}>
+                                Financier Mandate
+                              </label>
+                            </div>
+                          </div>
+                        </div>
                       ))}
-                      <div className="flex flex-col">
-                        <label htmlFor="other_description">Other Product(s) Description</label>
-                        <input type="text" name="other_description" id="other_description" className="border" placeholder="Please list all the other product(s)" />
-                      </div>
-                    </div>
+                    </>
                   )}
                 </>
               ))}
+              <div className="flex flex-col">
+                <label htmlFor="other_description">
+                  Other Product(s) Description
+                </label>
+                <input
+                  type="text"
+                  name="other_description"
+                  id="other_description"
+                  className="border"
+                  placeholder="Please list all the other product(s)"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col gap-5">
@@ -374,95 +431,93 @@ const MemberRegistration = () => {
                   Find and/or Consult with local sellers, buyers, financiers *
                 </label>
                 <div className="flex flex-row gap-1">
-                <input
-                  type="radio"
-                  id="consultAccept"
-                  name="consult"
-                  value="accept"
+                  <input
+                    type="radio"
+                    id="consultAccept"
+                    name="consult"
+                    value="accept"
                   />
                   <span>I Accept</span>
-                <input
-                  type="radio"
-                  id="consultDecline"
-                  name="consult"
-                  value="decline"
-                  className="ml-5"
+                  <input
+                    type="radio"
+                    id="consultDecline"
+                    name="consult"
+                    value="decline"
+                    className="ml-5"
                   />
                   <span>No Thanks</span>
-                  </div>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
-    <label htmlFor="inspectionAccept">
-        Working with Inspection Agency at the Port *
-    </label>
-    <div className="flex flex-row gap-1">
-        <input
-            type="radio"
-            id="inspectionAccept"
-            name="inspection"
-            value="accept"
-        />
+                <label htmlFor="inspectionAccept">
+                  Working with Inspection Agency at the Port *
+                </label>
+                <div className="flex flex-row gap-1">
+                  <input
+                    type="radio"
+                    id="inspectionAccept"
+                    name="inspection"
+                    value="accept"
+                  />
                   <span>I Accept</span>
 
-        <input
-            type="radio"
-            id="inspectionDecline"
-            name="inspection"
-            value="decline"
-            className="ml-5"
-        />
+                  <input
+                    type="radio"
+                    id="inspectionDecline"
+                    name="inspection"
+                    value="decline"
+                    className="ml-5"
+                  />
                   <span>No Thanks</span>
-
-    </div>
-</div>
-<div className="flex flex-col gap-2">
-    <label htmlFor="shippingAccept">
-        Working with Shipping Agency for the Export, Import Process *
-    </label>
-    <div className="flex flex-row gap-1">
-        <input
-            type="radio"
-            id="shippingAccept"
-            name="shipping"
-            value="accept"
-        />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="shippingAccept">
+                  Working with Shipping Agency for the Export, Import Process *
+                </label>
+                <div className="flex flex-row gap-1">
+                  <input
+                    type="radio"
+                    id="shippingAccept"
+                    name="shipping"
+                    value="accept"
+                  />
                   <span>I Accept</span>
 
-        <input
-            type="radio"
-            id="shippingDecline"
-            name="shipping"
-            value="decline"
-            className="ml-5"
-        />
+                  <input
+                    type="radio"
+                    id="shippingDecline"
+                    name="shipping"
+                    value="decline"
+                    className="ml-5"
+                  />
                   <span>No Thanks</span>
-
-    </div>
-</div>
-<div className="flex flex-col gap-2">
-    <label htmlFor="newsAccept">
-        Upload the News and Rank the member’s postings on our website *
-    </label>
-    <div className="flex flex-row gap-1">
-        <input
-            type="radio"
-            id="newsAccept"
-            name="news"
-            value="accept"
-        />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="newsAccept">
+                  Upload the News and Rank the member’s postings on our website
+                  *
+                </label>
+                <div className="flex flex-row gap-1">
+                  <input
+                    type="radio"
+                    id="newsAccept"
+                    name="news"
+                    value="accept"
+                  />
                   <span>I Accept</span>
 
-        <input
-            type="radio"
-            id="newsDecline"
-            name="news"
-            value="decline"
-            className="ml-5"
-        />
+                  <input
+                    type="radio"
+                    id="newsDecline"
+                    name="news"
+                    value="decline"
+                    className="ml-5"
+                  />
                   <span>No Thanks</span>
-
-    </div>
-</div>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col gap-5">
