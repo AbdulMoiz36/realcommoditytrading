@@ -9,6 +9,7 @@ import Register from './pages/auth/register';
 import Aboutus from './pages/about/aboutus';
 import MemberRegistration from './pages/member-registration';
 import PartnerRegistration from './pages/partner-registration/partner-registration';
+import ProductOffers from './pages/productOffers/productOffers';
 import { UserProvider } from './context/userProvider';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/about" element={<Aboutus />} />
           <Route path="/member-registration" element={<MemberRegistration />} />
           <Route path="/partner-registration" element={<PartnerRegistration />} />
+          <Route path="/product-offers/:id" element={<ProductOffers />} />
         </Routes>
         <Footer/>
       </UserProvider>

@@ -1,10 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdMenu, IoIosClose, IoMdArrowDropdown } from "react-icons/io";
 import { NavLink } from "react-router-dom";
 import logo from '../../images/logo.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+  const [categoryData, setCategoryData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://realcommoditytradingbackend.vercel.app/categories/parent/0"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        const limitedData = data.slice(0,5);
+        setCategories(limitedData);
+
+        // Fetch data for each category
+        const dataPromises = data.map(async (category) => {
+          const response = await fetch(
+            `https://realcommoditytradingbackend.vercel.app/categories/parent/${category.id}`
+          );
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch data for category ${category._id}`
+            );
+          }
+          const categoryData = await response.json();
+          return { categoryId: category._id, data: categoryData };
+        });
+
+        // Wait for all data to be fetched
+        const resolvedData = await Promise.all(dataPromises);
+
+        // Organize fetched data into an object
+        const dataObject = {};
+        resolvedData.forEach(({ categoryId, data }) => {
+          dataObject[categoryId] = data;
+        });
+        setCategoryData(dataObject);
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle error, show error message or retry logic
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const toggleIcon = () => {
     setIsOpen(!isOpen);
@@ -57,201 +105,26 @@ const Navbar = () => {
               About Us
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
-              href="#"
-            >
-              PETROLEUM
+          {categories.map((category) => (
+            <li key={category._id}>
+              <p className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1">
+              {category.name}
               <IoMdArrowDropdown />
-            </NavLink>
+              </p>
             <ul>
-              <li>
-                <NavLink href="#">
-                  <p>Crude Oil</p>
+            {categoryData[category._id]?.map((item) => (
+              <li key={item._id}>
+                <NavLink to={`/product-offers/${item.id}`}>
+                  <p>{item.name}</p>
                 </NavLink>
               </li>
-              <li>
-                <NavLink href="#">
-                  <p>EN590</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>LCO</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>LNG/LPG</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>A1/JP54</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Others</p>
-                </NavLink>
-              </li>
+            ))}
+               
             </ul>
           </li>
-          <li>
-            <NavLink
-              className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
-              href="#"
-            >
-              METAL
-              <IoMdArrowDropdown />
-            </NavLink>
-            <ul>
-              <li>
-                <NavLink href="#">
-                  <p>Copper</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Aluminum</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Gold</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Used Rail</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Iron Ores</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Others</p>
-                </NavLink>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <NavLink
-              className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
-              href="#"
-            >
-              AGRI/MEAT
-              <IoMdArrowDropdown />
-            </NavLink>
-            <ul>
-              <li>
-                <NavLink href="#">
-                  <p>Soybean</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Sugar</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Seed Oils</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Beef</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Chicken</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Pork</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Others</p>
-                </NavLink>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <NavLink
-              className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
-              href="#"
-            >
-              FINANCE
-              <IoMdArrowDropdown />
-            </NavLink>
-            <ul>
-              <li>
-                <NavLink href="#">
-                  <p>Project Finance</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Project Finance</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Bank Instruments</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Others</p>
-                </NavLink>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <NavLink
-              className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"
-              href="#"
-            >
-              SERVICE
-              <IoMdArrowDropdown />
-            </NavLink>
-            <ul>
-              <li>
-                <NavLink href="#">
-                  <p>Escrow Lawyer</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Shipping</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Storage</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Banking</p>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink href="#">
-                  <p>Others</p>
-                </NavLink>
-              </li>
-            </ul>
-          </li>
+          ))}
+          
+         
           <li>
             <NavLink
               className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1"

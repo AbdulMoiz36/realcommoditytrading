@@ -47,6 +47,7 @@ const DataTable = ({ columns, data, color }) => {
       return "inherit";
     }
   };
+
   // Set fixed widths for columns
   columns.forEach((column, index) => {
     if (index === 0) {
@@ -55,6 +56,7 @@ const DataTable = ({ columns, data, color }) => {
       column.width = 90;
     }
   });
+
   return (
     <>
       <div>
@@ -85,60 +87,74 @@ const DataTable = ({ columns, data, color }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()} className="font-normal">
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                className="border-2"
-                style={{ color: getTextColor(row.original.offer_type, row.original.offer_status) }}
-              >
-                {row.cells.map((cell, index) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className={`font-normal text-sm capitalize py-3 px-3 ${
-                        index === 0 ? "" : "text-center"
-                      }`}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {data.length === 0 ? (
+            <tr className="">
+              <td colSpan={columns.length} className="text-center py-5">
+                No offers found
+              </td>
+            </tr>
+          ) : (
+            page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  className="border-2"
+                  style={{
+                    color: getTextColor(
+                      row.original.offer_type,
+                      row.original.offer_status
+                    ),
+                  }}
+                >
+                  {row.cells.map((cell, index) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className={`font-normal text-sm capitalize py-3 px-3 ${
+                          index === 0 ? "" : "text-center"
+                        }`}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
-      <div className="flex justify-start items-center">
-        <div className="flex">
-          <button
-            onClick={() => previousPage()}
-            disabled={!canPreviousPage}
-            className="flex justify-center items-center p-2 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
-          >
-            <FaAngleLeft className="mt-1" />
-            Previous
-          </button>
-          <button
-            onClick={() => nextPage()}
-            disabled={!canNextPage}
-            className="flex justify-center items-center py-2 px-4 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
-          >
-            Next
-            <FaAngleRight className="mt-1" />
-          </button>
+      
+        <div className="flex justify-start items-center">
+          <div className="flex">
+            <button
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+              className="flex justify-center items-center p-2 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
+            >
+              <FaAngleLeft className="mt-1" />
+              Previous
+            </button>
+            <button
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+              className="flex justify-center items-center py-2 px-4 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
+            >
+              Next
+              <FaAngleRight className="mt-1" />
+            </button>
+          </div>
+          <div className="ml-4">
+            <span>
+              Page
+              <strong>
+                <span className={`text-${color}-600`}> {pageIndex + 1}</span>{" "}
+                of {totalPages}
+              </strong>
+            </span>
+          </div>
         </div>
-        <div className="ml-4">
-          <span>
-            Page
-            <strong>
-              <span className={`text-${color}-600`}> {pageIndex + 1}</span> of{" "}
-              {totalPages}
-            </strong>
-          </span>
-        </div>
-      </div>
     </>
   );
 };

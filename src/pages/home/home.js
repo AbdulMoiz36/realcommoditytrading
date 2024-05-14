@@ -122,7 +122,7 @@ const accordianItems = [
           rewards!
         </p>
         <br />
-        <p>
+        <p className="text-wrap">
           <b>Join Us at</b> :
           https://realcommoditytrading.com/partner-registration
         </p>
