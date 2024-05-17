@@ -40,7 +40,7 @@ const MemberRegistration = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:9001/categories/parent/0"
+          "https://realcommoditytradingbackend.vercel.app/categories/parent/0"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -51,7 +51,7 @@ const MemberRegistration = () => {
         // Fetch data for each category
         const dataPromises = data.map(async (category) => {
           const response = await fetch(
-            `http://localhost:9001/categories/parent/${category.id}`
+            `https://realcommoditytradingbackend.vercel.app/parent/${category.id}`
           );
           if (!response.ok) {
             throw new Error(
