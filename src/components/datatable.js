@@ -6,8 +6,9 @@ import {
   useGlobalFilter,
 } from "react-table";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
-const DataTable = ({ columns, data, color }) => {
+const DataTable = ({ columns, data, color , postType}) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -99,7 +100,7 @@ const DataTable = ({ columns, data, color }) => {
               return (
                 <tr
                   {...row.getRowProps()}
-                  className="border-2"
+                  className="border-2 hover:bg-gray-100 transition duration-200"
                   style={{
                     color: getTextColor(
                       row.original.offer_type,
@@ -115,7 +116,13 @@ const DataTable = ({ columns, data, color }) => {
                           index === 0 ? "" : "text-center"
                         }`}
                       >
-                        {cell.render("Cell")}
+                        <NavLink
+                          to={`/${postType}-details/${row.original._id}`}
+                          key={row.original._id}
+                          className=""
+                        >
+                          {cell.render("Cell")}
+                        </NavLink>
                       </td>
                     );
                   })}
@@ -125,36 +132,36 @@ const DataTable = ({ columns, data, color }) => {
           )}
         </tbody>
       </table>
-      
-        <div className="flex justify-start items-center">
-          <div className="flex">
-            <button
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
-              className="flex justify-center items-center p-2 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
-            >
-              <FaAngleLeft className="mt-1" />
-              Previous
-            </button>
-            <button
-              onClick={() => nextPage()}
-              disabled={!canNextPage}
-              className="flex justify-center items-center py-2 px-4 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
-            >
-              Next
-              <FaAngleRight className="mt-1" />
-            </button>
-          </div>
-          <div className="ml-4">
-            <span>
-              Page
-              <strong>
-                <span className={`text-${color}-600`}> {pageIndex + 1}</span>{" "}
-                of {totalPages}
-              </strong>
-            </span>
-          </div>
+
+      <div className="flex justify-start items-center">
+        <div className="flex">
+          <button
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+            className="flex justify-center items-center p-2 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
+          >
+            <FaAngleLeft className="mt-1" />
+            Previous
+          </button>
+          <button
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+            className="flex justify-center items-center py-2 px-4 border-2 disabled:opacity-50 hover:bg-slate-200 transition ease-in-out duration-300"
+          >
+            Next
+            <FaAngleRight className="mt-1" />
+          </button>
         </div>
+        <div className="ml-4">
+          <span>
+            Page
+            <strong>
+              <span className={`text-${color}-600`}> {pageIndex + 1}</span> of{" "}
+              {totalPages}
+            </strong>
+          </span>
+        </div>
+      </div>
     </>
   );
 };

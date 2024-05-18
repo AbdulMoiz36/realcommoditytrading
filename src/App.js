@@ -10,6 +10,8 @@ import Aboutus from './pages/about/aboutus';
 import MemberRegistration from './pages/member-registration';
 import PartnerRegistration from './pages/partner-registration/partner-registration';
 import ProductOffers from './pages/productOffers/productOffers';
+import PostDetails from './pages/postdetails/postdetails';
+import VofferDetails from './pages/vofferdetails/vofferdetails';
 import { UserProvider } from './context/userProvider';
 
 const App = () => {
@@ -25,6 +27,8 @@ const App = () => {
           <Route path="/member-registration" element={<MemberRegistration />} />
           <Route path="/partner-registration" element={<PartnerRegistration />} />
           <Route path="/product-offers/:id" element={<ProductOffers />} />
+          <Route path="/post-details/:id" element={<PostDetails />} />
+          <Route path="/v-post-details/:id" element={<VofferDetails />} />
         </Routes>
         <Footer/>
       </UserProvider>

@@ -308,7 +308,7 @@ const Home = () => {
           </div>
         </div>
         <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
-          <DataTable columns={columns} data={vOffers} color={"blue"} />
+          <DataTable columns={columns} data={vOffers} color={"blue"} postType={"v-post"} />
         </div>
       </div>
       {/* Offers Section */}
@@ -334,7 +334,7 @@ const Home = () => {
           </div>
         </div>
         <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
-          <DataTable columns={postColumns} data={posts} color={"green"} />
+          <DataTable columns={postColumns} data={posts} color={"green"} postType={"post"} />
         </div>
       </div>
 
