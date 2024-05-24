@@ -11,6 +11,7 @@ import MemberRegistration from './pages/member-registration';
 import PartnerRegistration from './pages/partner-registration/partner-registration';
 import ProductOffers from './pages/productOffers/productOffers';
 import { UserProvider } from './context/userProvider';
+// chek
 
 const App = () => {
   return (
