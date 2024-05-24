@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from '../../context/userProvider';
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
