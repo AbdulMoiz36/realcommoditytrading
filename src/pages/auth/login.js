@@ -141,6 +141,8 @@ const Login = () => {
             >
               Sign In with Google
             </button>
+            <p className="text-lg text-center">Or</p>
+            <GoogleSignInButton />
           </form>
         </div>
         <div>
