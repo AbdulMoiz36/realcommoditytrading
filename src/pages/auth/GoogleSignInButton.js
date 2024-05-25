@@ -26,7 +26,7 @@ const GoogleSignInButton = () => {
 
       if (existingUser) {
         // User exists, log them in
-        toast.success('Login successful! Redirecting to home...');
+        toast.success('Login successful');
         sessionStorage.setItem("userId", existingUser._id); // Assuming the user ID is stored in _id
         sessionStorage.setItem("token", existingUser.token); // Assuming the user token is stored in token
         setUserName(existingUser.firstName); // Set the user's first name
