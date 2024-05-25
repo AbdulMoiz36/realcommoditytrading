@@ -19,7 +19,7 @@ const GoogleSignInButton = () => {
 
       const { email, given_name: firstName, family_name: lastName } = credentialResponseDecoded;
 
-      const existingUsersResponse = await axios.get('https://realcommoditytradingbackend.vercel.app/users');
+      const existingUsersResponse = await axios.get('http://localhost:9001/users');
       const existingUsersData = existingUsersResponse.data;
 
       const existingUser = existingUsersData.find(user => user.email === email);
@@ -33,7 +33,7 @@ const GoogleSignInButton = () => {
         navigate('/'); // Redirect to home page
       } else {
         // User does not exist, register them
-        const response = await axios.post('https://realcommoditytradingbackend.vercel.app/users/register', {
+        const response = await axios.post('http://localhost:9001/users/register', {
           email,
           firstName,
           lastName
@@ -70,6 +70,6 @@ const GoogleSignInButton = () => {
       />
     </div>
   );
-};
+}; 
 
 export default GoogleSignInButton;
