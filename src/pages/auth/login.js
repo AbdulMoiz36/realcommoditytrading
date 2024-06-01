@@ -26,7 +26,7 @@ const Login = () => {
       if (!email.trim() || !password.trim()) {
         throw new Error("Email and password are required");
       }
-  
+
       // Proceed with login process
       const response = await fetch("https://realcommoditytradingbackend.vercel.app/users/login", {
         method: "POST",
@@ -50,7 +50,7 @@ const Login = () => {
       // Fetch user data using the stored user ID
       const userId = data.userId;
       if (userId) {
-        fetch(`https://realcommoditytradingbackend.vercel.app/users/${userId}`)
+        fetch(`http://localhost:9001/users/${userId}`)
           .then((response) => response.json())
           .then((data) => {
             // Set the user's first name

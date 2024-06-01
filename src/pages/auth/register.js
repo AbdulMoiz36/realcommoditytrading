@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -182,11 +183,11 @@ const Register = () => {
             >
               Sign Up
             </button>
+            <p className="text-lg text-center">Or</p>
+            <GoogleSignInButton />
           </form>
         </div>
-        <div>
-          <p className="text-lg">Or</p>
-        </div>
+              
       </div>
     </div>
   );
