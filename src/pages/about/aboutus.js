@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../../components/button";
 import "./aboutus.css";
 import video from "../../videos/aboutus.mp4";
@@ -6,6 +6,9 @@ import about1 from "../../images/about-1.png";
 import about2 from "../../images/about-2.png";
 import about3 from "../../images/about-3.jpg";
 const Aboutus = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       {/* Banner */}

@@ -58,6 +58,7 @@ const ProductOffers = () => {
     fetchPosts();
     fetchData();
     fetchVerifiedOffers();
+    window.scrollTo(0, 0);
   },[id]);
 
   const verifiedPostColumns = [

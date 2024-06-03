@@ -7,11 +7,15 @@ import { Footer } from './components/footer/footer';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Aboutus from './pages/about/aboutus';
-import MemberRegistration from './pages/member-registration';
+import MemberRegistration from './pages/member-registration/member-registration';
 import PartnerRegistration from './pages/partner-registration/partner-registration';
 import ProductOffers from './pages/productOffers/productOffers';
 import PostDetails from './pages/postdetails/postdetails';
 import VofferDetails from './pages/vofferdetails/vofferdetails';
+import InquiryOthers from './pages/inquiry/inquiry-others';
+import InquiryPartnerProgram from './pages/inquiry/inquiry-partner-program';
+import InquiryVOffer from './pages/inquiry/inquiry-verified-offers';
+import InquiryWebsiteIssues from './pages/inquiry/inquiry-website-issues';
 import { UserProvider } from './context/userProvider';
 
 const App = () => {
@@ -29,6 +33,10 @@ const App = () => {
           <Route path="/product-offers/:id" element={<ProductOffers />} />
           <Route path="/post-details/:id" element={<PostDetails />} />
           <Route path="/v-post-details/:id" element={<VofferDetails />} />
+          <Route path="/inquiry-verified-offers" element={<InquiryVOffer />} />
+          <Route path="/inquiry-partner-program" element={<InquiryPartnerProgram />} />
+          <Route path="/inquiry-website-issues" element={<InquiryWebsiteIssues />} />
+          <Route path="/inquiry-others" element={<InquiryOthers />} />
         </Routes>
         <Footer/>
       </UserProvider>

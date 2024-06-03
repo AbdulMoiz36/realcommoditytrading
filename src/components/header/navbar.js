@@ -171,22 +171,22 @@ const Navbar = () => {
             </NavLink>
             <ul>
               <li>
-                <NavLink href="#">
+                <NavLink to="/inquiry-verified-offers">
                   <p>Verified Offers</p>
                 </NavLink>
               </li>
               <li>
-                <NavLink href="#">
+                <NavLink to="/inquiry-website-issues">
                   <p>Website Issues</p>
                 </NavLink>
               </li>
               <li>
-                <NavLink href="#">
+                <NavLink to="/inquiry-partner-program">
                   <p>Partner Program</p>
                 </NavLink>
               </li>
               <li>
-                <NavLink href="#">
+                <NavLink to="/inquiry-others">
                   <p>Others</p>
                 </NavLink>
               </li>

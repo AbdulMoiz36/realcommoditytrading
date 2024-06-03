@@ -39,45 +39,50 @@ const MemberRegistration = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://realcommoditytradingbackend.vercel.app/categories/parent/0"
-        );
+        // Fetch top-level categories
+        const response = await fetch("https://realcommoditytradingbackend.vercel.app/categories/parent/0");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
         setCategories(data);
-
+        console.log("Top-level categories:", data);
+    
         // Fetch data for each category
         const dataPromises = data.map(async (category) => {
-          const response = await fetch(
-            `https://realcommoditytradingbackend.vercel.app/parent/${category.id}`
-          );
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch data for category ${category._id}`
-            );
+          try {
+            const categoryResponse = await fetch(`https://realcommoditytradingbackend.vercel.app/categories/parent/${category.id}`);
+            if (!categoryResponse.ok) {
+              throw new Error(`Failed to fetch data for category ${category.id}`);
+            }
+            const categoryData = await categoryResponse.json();
+            console.log(`Data for category ${category.id}:`, categoryData);
+            return { categoryId: category.id, data: categoryData };
+          } catch (categoryError) {
+            console.error(`Error fetching data for category ${category.id}:`, categoryError);
+            return { categoryId: category.id, data: [] }; // Return an empty array or suitable fallback
           }
-          const categoryData = await response.json();
-          return { categoryId: category._id, data: categoryData };
         });
-
+    
         // Wait for all data to be fetched
         const resolvedData = await Promise.all(dataPromises);
-
+    
         // Organize fetched data into an object
         const dataObject = {};
         resolvedData.forEach(({ categoryId, data }) => {
           dataObject[categoryId] = data;
         });
         setCategoryData(dataObject);
+        console.log("Organized category data:", dataObject);
       } catch (error) {
         console.error("Error:", error);
         // Handle error, show error message or retry logic
       }
     };
-
+    
     fetchData();
+    
+    // window.scrollTo(0, 0);
   }, []);
 
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -262,7 +267,7 @@ const MemberRegistration = () => {
                       className="cursor-pointer"
                       onClick={() => toggleCategory(category._id)}
                     >
-                      ⮟
+                      Drop
                     </span>
                   </div>
                   <div className="flex gap-4">
