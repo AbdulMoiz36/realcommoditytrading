@@ -65,7 +65,7 @@ const InquiryVOffer = () => {
         <h1 className="text-center text-3xl m-5  md:text-4xl font-bold mb-3">Inquiry On Verified Offer</h1>
         <form onSubmit={handleSubmit}>
           <div className='flex flex-col md:flex-row md:justify-evenly m-5 gap-8'>
-            <div className='w-full md:w-1/2  flex flex-col justify-center gap-2'>
+            <div className='w-full md:w-1/2 flex flex-col justify-center gap-2'>
               <label htmlFor="name" className='font-semibold'>Your Name: <span className='text-red-600'>*</span></label>
               <input
                 type="text"
@@ -76,8 +76,8 @@ const InquiryVOffer = () => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div  className='w-full md:w-1/2 flex flex-col justify-center gap-2'>
-            <label htmlFor="email" className='font-semibold'>Email Address: <span className='text-red-600'>*</span></label>
+            <div className='w-full md:w-1/2 flex flex-col justify-center gap-2'>
+              <label htmlFor="email" className='font-semibold'>Email Address: <span className='text-red-600'>*</span></label>
               <input
                 type="email"
                 id="email"
@@ -90,18 +90,17 @@ const InquiryVOffer = () => {
           </div>
           <div className='mt-7 mx-5'>
             <div className='flex flex-col w-full gap-2'>
-            <label htmlFor="name" className='font-semibold'>Inquiry Description: <span className='text-red-600'>*</span></label>
+              <label htmlFor="inquiry" className='font-semibold'>Inquiry Description: <span className='text-red-600'>*</span></label>
               <textarea
-                type="text"
                 id="inquiry"
-                placeholder="Please describe your inquiry's as much details as possible. Our team will get back to you soon with the response."
+                placeholder="Please describe your inquiry in as much detail as possible. Our team will get back to you soon with a response."
                 className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full"
                 value={inquiry}
                 onChange={(e) => setInquiry(e.target.value)}
               />
             </div>
             <div className='flex justify-center mt-7'>
-            <input type="button" value="Submit" className='bg-lime-500 hover:bg-lime-600 cursor-pointer px-10 py-3 rounded-lg text-white font-semibold text-lg' />
+              <input type="submit" value="Submit" className='bg-lime-500 hover:bg-lime-600 cursor-pointer px-10 py-3 rounded-lg text-white font-semibold text-lg' />
             </div>
           </div>
         </form>
