@@ -26,7 +26,7 @@ const InquiryOthers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(inquiry){
+    if(inquiry != "" && name != "" && email != ""){
 
       try {
         const response = await fetch('https://realcommoditytradingbackend.vercel.app/inquiries', {
