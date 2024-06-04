@@ -87,7 +87,10 @@ const Header = () => {
                 <IoPersonCircleSharp className="text-xl"/>
                 <p className="capitalize">{userName}</p>
                   <ul className="z-50 text-black ">
-                    <li onClick={handleLogout}>Logout</li> {/* Add onClick event to handleLogout */}
+                    <NavLink to={""}><li>Profile</li></NavLink> 
+                    <NavLink to={""}><li>Wallet</li></NavLink> 
+                    <NavLink to={""}><li>My Posting</li></NavLink> 
+                    <li onClick={handleLogout}>Logout</li>
                   </ul>
               <IoMdArrowDropdown className="mt-1"/>
               </div>
