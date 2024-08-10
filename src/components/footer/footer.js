@@ -334,6 +334,8 @@ export const Footer = () => {
           </NavLink>
         </div>
       </div>
+      {/* ChatBot Integration */}
+    <script async data-id="5619856692" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
     </div>
   );
 };
