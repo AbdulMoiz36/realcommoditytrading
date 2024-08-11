@@ -56,7 +56,7 @@ const PostDetails = () => {
       };
 
       const response = await fetch(
-        "http://localhost:9001/post_comments_n_socials/",
+        "https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/",
         {
           method: "POST",
           headers: {
@@ -124,7 +124,7 @@ const PostDetails = () => {
     const postId = p_id;
     try {
       const response = await fetch(
-        `http://localhost:9001/post_comments_n_socials/post/${postId}`
+        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/post/${postId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch data");
