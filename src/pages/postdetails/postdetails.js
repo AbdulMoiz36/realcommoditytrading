@@ -4,11 +4,15 @@ import { FaRegHeart,FaReply } from "react-icons/fa";
 import { useUser } from "../../context/userProvider";
 import { IoPerson } from "react-icons/io5";
 import { LuCalendarClock } from "react-icons/lu";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PostDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [postUser, setPostUser] = useState([]);
+  const [postLikes, setPostLikes] = useState([]);
+  const [likeStatus, setLikeStatus] = useState([0]);
   const [postComments, setPostComments] = useState([]);
   const [comment, setComment] = useState([]);
   const { userName, setUserName, userEmail, setUserEmail } = useUser();
@@ -30,6 +34,65 @@ const PostDetails = () => {
     // Reset the reply state after sending
     setReplyingTo(null);
     setReplyText('');
+  };
+
+
+
+
+  // Likes
+  const fetchPostLikes = async () => {
+    const postId = id;
+    try {
+      const response = await fetch(
+        `http://localhost:9001/post_like_tbl/post/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const postLikes = await response.json();
+      console.log("postLikes:", postLikes); // Debugging line
+      setPostLikes(postLikes.length);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message or retry logic
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const newLike = {
+        post_id: id,
+        user_id: sessionStorage.getItem("userId"),
+      };
+
+      const response = await fetch(
+        "http://localhost:9001/post_like_tbl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newLike),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to like post");
+      }
+
+      const result = await response.json();
+      console.log("Post Liked:", result);
+
+      // Optionally, clear the comment text and/or update the UI
+      toast.success("You Liked This Post");
+      // setComment("");
+      fetchPostLikes();
+
+      // Call any function to refresh the comments list, if needed
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message or retry logic
+    }
   };
 
   const getTextColor = (offerStatus) => {
@@ -56,7 +119,7 @@ const PostDetails = () => {
       };
 
       const response = await fetch(
-        "http://localhost:9001/post_comments_n_socials/",
+        "https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/",
         {
           method: "POST",
           headers: {
@@ -74,6 +137,7 @@ const PostDetails = () => {
       console.log("Comment posted:", result);
 
       // Optionally, clear the comment text and/or update the UI
+      toast.success("Comment Added");
       setComment("");
       fetchPostComments(id);
 
@@ -120,11 +184,12 @@ const PostDetails = () => {
       // Handle error, show error message or retry logic
     }
   };
+ 
   const fetchPostComments = async (p_id) => {
     const postId = p_id;
     try {
       const response = await fetch(
-        `http://localhost:9001/post_comments_n_socials/post/${postId}`
+        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/post/${postId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch data");
@@ -141,6 +206,7 @@ const PostDetails = () => {
   useEffect(() => {
     fetchData();
     fetchPostComments(id);
+    fetchPostLikes();
   }, [id]);
   return (
     <>
@@ -149,9 +215,9 @@ const PostDetails = () => {
           <div className="w-full">
             <div className="flex justify-between ">
               <p className="font-semibold text-blue-600 text-2xl">Offer Post</p>
-              <div className="flex items-center gap-2 text-xl">
-                <FaRegHeart className="text-red-600" />
-                <p>Likes</p>
+              <div className="flex items-center gap-2 text-xl cursor-pointer" onClick={handleLike} >
+                <FaRegHeart className="text-red-600"  />
+                <p>{postLikes > 0 ? postLikes : 0 }</p>
               </div>
             </div>
 

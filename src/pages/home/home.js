@@ -160,6 +160,22 @@ const Home = () => {
       console.log(error);
     }
   };
+  const fetchPostComments = async (p_id) => {
+    try {
+      const response = await fetch(
+        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/post/${p_id}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      return data.length; // Return the count of comments
+    } catch (error) {
+      console.log(error);
+      return 0; // In case of an error, return 0 comments
+    }
+  };
+  
   const fetchPosts = async () => {
     try {
       const response = await fetch(
@@ -169,11 +185,21 @@ const Home = () => {
         }
       );
       const postdata = await response.json();
-      setposts(postdata);
+  
+      // Loop through posts and fetch the comment count for each
+      const postsWithComments = await Promise.all(
+        postdata.map(async (post) => {
+          const commentCount = await fetchPostComments(post._id);
+          return { ...post, commentCount }; // Add commentCount to each post object
+        })
+      );
+  
+      setposts(postsWithComments);
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   const columns = [
     {
@@ -239,7 +265,7 @@ const Home = () => {
           <FaRegCommentAlt className="mx-auto" />
         </div>
       ),
-      accessor: "totalComments",
+      accessor: "commentCount",
     },
     {
       Header: () => (
