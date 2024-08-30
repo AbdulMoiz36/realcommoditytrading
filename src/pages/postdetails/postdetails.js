@@ -583,9 +583,10 @@ const PostDetails = () => {
                     </div>
                   )}
                   {replyingTo === comment._id && (
-                    <div className="mt-2">
+                    
+                    <div className=" container mt-2">
                       <textarea
-                        className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[200%]"
+                        className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full "
                         rows="3"
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
