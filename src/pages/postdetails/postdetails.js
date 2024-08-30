@@ -296,7 +296,7 @@ const PostDetails = () => {
       }));
   
       setPostComments(commentsWithReplies);
-      setTotalComments(mainComments.length); 
+      setTotalComments(allComments.length); 
     } catch (error) {
       console.error("Error:", error);
     }
@@ -666,18 +666,7 @@ const PostDetails = () => {
               </div>
             </div>
 
-            {/* <div>
-              <ul>
-                {postComments.slice(0, commentsToShow).map((comment, index) => (
-                  <li key={index}>{comment.comment_text}</li>
-                ))}
-              </ul>
-              {commentsToShow < postComments.length && (
-                <button onClick={loadMoreComments}
-                className="bg-blue-400 text-white font-semibold py-2 px-5 text-md rounded-lg hover:bg-blue-500 hover:shadow-lg transition-all ease-in-out duration-500"
-                >Load More</button>
-              )}
-            </div> */}
+          
           </div>
         </div>
       </div>
