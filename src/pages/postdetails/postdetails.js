@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaRegHeart,FaReply } from "react-icons/fa";
+import { FaRegHeart, FaReply, FaHeart } from "react-icons/fa";
 import { useUser } from "../../context/userProvider";
 import { IoPerson } from "react-icons/io5";
 import { LuCalendarClock } from "react-icons/lu";
@@ -12,86 +12,152 @@ const PostDetails = () => {
   const [data, setData] = useState([]);
   const [postUser, setPostUser] = useState([]);
   const [postLikes, setPostLikes] = useState([]);
-  const [likeStatus, setLikeStatus] = useState([0]);
+  const [likeStatus, setLikeStatus] = useState(0);
+  const [likeId, setLikeId] = useState();
   const [postComments, setPostComments] = useState([]);
   const [comment, setComment] = useState([]);
-  const { userName, setUserName, userEmail, setUserEmail } = useUser();
+  const { userName, userEmail } = useUser();
   // Comments
   const [totalComments, setTotalComments] = useState([]);
   const [commentsToShow, setCommentsToShow] = useState(5);
   // Reply
   const [replyingTo, setReplyingTo] = useState(null); // Track which comment is being replied to
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
   const handleReplyClick = (commentId) => {
     setReplyingTo(commentId); // Set the comment ID that is being replied to
-    setReplyText(''); // Clear any previous reply text
+    setReplyText(""); // Clear any previous reply text
   };
 
   const handleSendReply = (commentId) => {
     // Handle sending the reply (e.g., send replyText to backend)
-    console.log('Sending reply to comment ID:', commentId, 'Reply text:', replyText);
+    console.log(
+      "Sending reply to comment ID:",
+      commentId,
+      "Reply text:",
+      replyText
+    );
 
     // Reset the reply state after sending
     setReplyingTo(null);
-    setReplyText('');
+    setReplyText("");
   };
-
-
-
-
-  // Likes
+  // Function to fetch post likes and determine if the user has liked the post
   const fetchPostLikes = async () => {
     const postId = id;
+    const userId = sessionStorage.getItem("userId");
+
     try {
+      // Fetch likes for the post to count total likes
       const response = await fetch(
         `http://localhost:9001/post_like_tbl/post/${postId}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        setPostLikes(0); // Set to 0 if fetch fails
+        throw new Error("Failed to fetch post likes");
       }
+
       const postLikes = await response.json();
-      console.log("postLikes:", postLikes); // Debugging line
-      setPostLikes(postLikes.length);
+
+      // Set the total number of likes
+      setPostLikes(Object.keys(postLikes).length);
+
+      // Check if the user has liked the post
+      const userLikeResponse = await fetch(
+        `http://localhost:9001/post_like_tbl/user_post/${userId}/${postId}`
+      );
+
+      if (userLikeResponse.ok) {
+        const userLikeData = await userLikeResponse.json();
+        console.log(userLikeData.length);
+
+        // Ensure the data structure is as expected
+        if (userLikeData.length > 0) {
+          setLikeStatus(1); // Set likeStatus to 1 if the user has liked the post
+          setLikeId(userLikeData._id); // Save the like ID
+        } else {
+          setLikeStatus(0); // Set likeStatus to 0 if no like ID is found in the response
+          setLikeId(null);
+        }
+      } else if (userLikeResponse.status === 404) {
+        // User has not liked the post
+        setLikeStatus(0);
+        setLikeId(null);
+      } else {
+        throw new Error("Failed to check user's like status");
+      }
     } catch (error) {
       console.error("Error:", error);
-      // Handle error, show error message or retry logic
+      setLikeStatus(0); // Ensure likeStatus is reset in case of error
     }
   };
 
-  const handleLike = async () => {
-    try {
-      const newLike = {
-        post_id: id,
-        user_id: sessionStorage.getItem("userId"),
-      };
+  // Function to handle adding a like
+  const saveLike = async () => {
+    const post_id = id;
+    const user_id = sessionStorage.getItem("userId");
 
+    try {
+      const requestBody = { post_id, user_id };
+
+      const response = await fetch("http://localhost:9001/post_like_tbl", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create a new like entry");
+      }
+
+      // Upon successful creation, update the state to reflect the new like
+      const newLikeData = await response.json();
+      setLikeStatus(1);
+      setLikeId(newLikeData._id); // Save new like ID
+      toast.success("You liked this post");
+
+      // Optionally refetch likes
+      fetchPostLikes(); // Refresh to reflect updated likes
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("An error occurred while liking the post");
+    }
+  };
+
+  // Function to handle removing a like
+  const deleteLike = async () => {
+    const post_id = id;
+    const user_id = sessionStorage.getItem("userId");
+
+    if (likeStatus === 0) return; // No like to delete
+
+    try {
       const response = await fetch(
-        "http://localhost:9001/post_like_tbl",
+        `http://localhost:9001/post_like_tbl/${user_id}/${post_id}`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newLike),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to like post");
+        toast.error("Like failed to be removed from this post");
+        throw new Error("Failed to delete like");
       }
 
-      const result = await response.json();
-      console.log("Post Liked:", result);
+      // Update state to reflect the like removal
+      setLikeStatus(0);
+      setLikeId(null);
+      toast.success("Like removed from this post");
 
-      // Optionally, clear the comment text and/or update the UI
-      toast.success("You Liked This Post");
-      // setComment("");
-      fetchPostLikes();
-
-      // Call any function to refresh the comments list, if needed
+      // Optionally refetch likes
+      fetchPostLikes(); // Refresh to reflect updated likes
     } catch (error) {
       console.error("Error:", error);
-      // Handle error, show error message or retry logic
+      toast.error("An error occurred while removing the like");
     }
   };
 
@@ -133,9 +199,6 @@ const PostDetails = () => {
         throw new Error("Failed to post comment");
       }
 
-      const result = await response.json();
-      console.log("Comment posted:", result);
-
       // Optionally, clear the comment text and/or update the UI
       toast.success("Comment Added");
       setComment("");
@@ -164,7 +227,7 @@ const PostDetails = () => {
       setData(data);
       fetchPostUser(data.user_id);
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
       // Handle error, show error message or retry logic
     }
   };
@@ -180,11 +243,11 @@ const PostDetails = () => {
       const postUser = await response.json();
       setPostUser(postUser);
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
       // Handle error, show error message or retry logic
     }
   };
- 
+
   const fetchPostComments = async (p_id) => {
     const postId = p_id;
     try {
@@ -198,7 +261,7 @@ const PostDetails = () => {
       setPostComments(postComments);
       setTotalComments(postComments.length); // Set total number of comments here
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
       // Handle error, show error message or retry logic
     }
   };
@@ -208,17 +271,37 @@ const PostDetails = () => {
     fetchPostComments(id);
     fetchPostLikes();
   }, [id]);
+
   return (
     <>
-      <div className="w-full flex justify-center items-center p-4">
+      <div className="flex justify-center">
         <div className="lg:p-16 md:p-10 py-10 px-3 shadow-xl border-2 my-10 w-6/6 md:w-5/6 lg:w-4/6 flex flex-col items-center lg:items-start gap-10">
           <div className="w-full">
             <div className="flex justify-between ">
               <p className="font-semibold text-blue-600 text-2xl">Offer Post</p>
-              <div className="flex items-center gap-2 text-xl cursor-pointer" onClick={handleLike} >
-                <FaRegHeart className="text-red-600"  />
-                <p>{postLikes > 0 ? postLikes : 0 }</p>
-              </div>
+              {likeStatus > 0 ? (
+                <div
+                  className="flex items-center gap-2 text-xl cursor-pointer"
+                  onClick={() => {
+                    console.log("Deleting like...");
+                    deleteLike();
+                  }}
+                >
+                  <FaHeart className="text-red-600" />
+                  <p>{postLikes > 0 ? postLikes : 0}</p>
+                </div>
+              ) : (
+                <div
+                  className="flex items-center gap-2 text-xl cursor-pointer"
+                  onClick={() => {
+                    console.log("Saving like...");
+                    saveLike();
+                  }}
+                >
+                  <FaRegHeart className="text-red-600" />
+                  <p>{postLikes > 0 ? postLikes : 0}</p>
+                </div>
+              )}
             </div>
 
             <div className="bg-gray-100 p-10 text-lg flex flex-col gap-2 ">
@@ -390,66 +473,74 @@ const PostDetails = () => {
                 Comments: {totalComments}
               </h2>
               {postComments.slice(0, commentsToShow).map((comment, index) => (
-        <div className="mt-5 flex gap-2 group" key={index}>
-          <div>
-            <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600 mt-2" />
-          </div>
-          <div>
-            <div className="flex flex-col">
-              <p className="font-semibold text-lg capitalize">
-                {comment.user_name}
-              </p>
-              <p className="text-sm flex">
-                <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
-                {new Date(comment.created_at).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}{' '}
-                {new Date(comment.created_at).toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </p>
-            </div>
-            <div className="mt-1 text-lg">{comment.comment_text}</div>
-            <div className="mt-2">
-              <button
-                className="text-yellow-700 font-semibold hidden group-hover:flex"
-                onClick={() => handleReplyClick(comment._id)}
-              >
-               <FaReply className="mt-1 mr-1 " /> Reply
-              </button>
-            </div>
-            {replyingTo === comment._id && (
-              <div className="mt-2">
-                <textarea
-                  className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[200%]"
-                  rows="3"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Write your reply..."
-                ></textarea>
-                <button
-                  className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
-                  onClick={() => handleSendReply(comment._id)}
-                >
-                  Send Reply
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      ))}
-            {commentsToShow < postComments.length && (
-              <div className="flex justify-center mt-5">
-
-                  <button onClick={loadMoreComments}
-                  className="bg-gray-500 text-white font-semibold py-2 px-5 text-md rounded-lg hover:bg-lime-500 hover:shadow-lg transition-all ease-in-out duration-500"
-                  >Load More Comments...</button>
+                <div className="mt-5 flex gap-2 group" key={index}>
+                  <div>
+                    <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600 mt-2" />
                   </div>
-                )}
+                  <div>
+                    <div className="flex flex-col">
+                      <p className="font-semibold text-lg capitalize">
+                        {comment.user_name}
+                      </p>
+                      <p className="text-sm flex">
+                        <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
+                        {new Date(comment.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}{" "}
+                        {new Date(comment.created_at).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                    </div>
+                    <div className="mt-1 text-lg">{comment.comment_text}</div>
+                    <div className="mt-2">
+                      <button
+                        className="text-yellow-700 font-semibold hidden group-hover:flex"
+                        onClick={() => handleReplyClick(comment._id)}
+                      >
+                        <FaReply className="mt-1 mr-1 " /> Reply
+                      </button>
+                    </div>
+                    {replyingTo === comment._id && (
+                      <div className="mt-2">
+                        <textarea
+                          className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[200%]"
+                          rows="3"
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          placeholder="Write your reply..."
+                        ></textarea>
+                        <button
+                          className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
+                          onClick={() => handleSendReply(comment._id)}
+                        >
+                          Send Reply
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {commentsToShow < postComments.length && (
+                <div className="flex justify-center mt-5">
+                  <button
+                    onClick={loadMoreComments}
+                    className="bg-gray-500 text-white font-semibold py-2 px-5 text-md rounded-lg hover:bg-lime-500 hover:shadow-lg transition-all ease-in-out duration-500"
+                  >
+                    Load More Comments...
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="mt-5 container">
@@ -478,14 +569,14 @@ const PostDetails = () => {
                     />
                   </div>
                 </div>
-                <div className="flex ">
-                  <div className="flex flex-col px-10 pt-3">
+                <div className="mt-5">
+                  <div className="container px-20">
                     <label htmlFor="comment-box">Comment:</label>
                     <textarea
                       type="text"
                       id="comment-box"
                       placeholder="Comment"
-                      className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[410%]"
+                      className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full "
                       value={comment}
                       onChange={(e) => {
                         setComment(e.target.value);
