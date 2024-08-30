@@ -28,19 +28,47 @@ const PostDetails = () => {
     setReplyText(""); // Clear any previous reply text
   };
 
-  const handleSendReply = (commentId) => {
-    // Handle sending the reply (e.g., send replyText to backend)
-    console.log(
-      "Sending reply to comment ID:",
-      commentId,
-      "Reply text:",
-      replyText
-    );
+  const handleSendReply = async (commentId) => {
+    // Prepare the reply object
+    const newReply = {
+      post_id: id, // The post ID to which the comment belongs
+      user_id: sessionStorage.getItem("userId"), // Fetch the user ID from session storage or state
+      user_name: userName, // Assume userName is fetched from state or props
+      comment_text: replyText, // The text of the reply
+      reply_id: commentId, // The ID of the parent comment to which this is a reply
+    };
 
-    // Reset the reply state after sending
-    setReplyingTo(null);
-    setReplyText("");
+    try {
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newReply), // Send the reply data to the backend
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to send reply");
+      }
+
+      // Optionally, show a success message
+      toast.success("Reply added successfully!");
+
+      // Clear the reply state and hide the reply input
+      setReplyingTo(null);
+      setReplyText("");
+
+      // Optionally, refresh comments to show the new reply
+      fetchPostComments(id); // Fetch updated comments list after reply is added
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      // Handle error, show error message or retry logic
+    }
   };
+
   // Function to fetch post likes and determine if the user has liked the post
   const fetchPostLikes = async () => {
     const postId = id;
@@ -247,7 +275,6 @@ const PostDetails = () => {
       // Handle error, show error message or retry logic
     }
   };
-
   const fetchPostComments = async (p_id) => {
     const postId = p_id;
     try {
@@ -257,14 +284,24 @@ const PostDetails = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
-      const postComments = await response.json();
-      setPostComments(postComments);
-      setTotalComments(postComments.length); // Set total number of comments here
+  
+      const allComments = await response.json();
+  
+      const mainComments = allComments.filter(comment => !comment.reply_id);
+      const replies = allComments.filter(comment => comment.reply_id);
+  
+      const commentsWithReplies = mainComments.map(comment => ({
+        ...comment,
+        reply: replies.find(reply => reply.reply_id === comment._id) || null, 
+      }));
+  
+      setPostComments(commentsWithReplies);
+      setTotalComments(mainComments.length); 
     } catch (error) {
-      // console.error("Error:", error);
-      // Handle error, show error message or retry logic
+      console.error("Error:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchData();
@@ -473,16 +510,14 @@ const PostDetails = () => {
                 Comments: {totalComments}
               </h2>
               {postComments.slice(0, commentsToShow).map((comment, index) => (
-                <div className="mt-5 flex gap-2 group" key={index}>
-                  <div>
+                <div className="mt-5 flex flex-col gap-2 group" key={index}>
+                  <div className="flex">
                     <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600 mt-2" />
-                  </div>
-                  <div>
-                    <div className="flex flex-col">
+                    <div className="ml-2">
                       <p className="font-semibold text-lg capitalize">
                         {comment.user_name}
                       </p>
-                      <p className="text-sm flex">
+                      <p className="text-sm flex items-center">
                         <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
                         {new Date(comment.created_at).toLocaleDateString(
                           "en-US",
@@ -501,34 +536,69 @@ const PostDetails = () => {
                           }
                         )}
                       </p>
+                      <div className="mt-1 text-lg">{comment.comment_text}</div>
+                      {!comment.reply && (
+                        <div className="mt-2">
+                          <button
+                            className="text-yellow-700 font-semibold hidden group-hover:flex"
+                            onClick={() => handleReplyClick(comment._id)}
+                          >
+                            <FaReply className="mt-1 mr-1 " /> Reply
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div className="mt-1 text-lg">{comment.comment_text}</div>
+                  </div>
+                  {comment.reply && (
+                    <div className="ml-12 mt-3 p-2 bg-amber-100 rounded-md border border-gray-300">
+                      <div>
+                        
+                      </div>
+                      <p className="font-semibold text-sm capitalize flex">
+                      <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600" />
+                        <span className="mt-1.5 ml-1">{comment.reply.user_name}</span>
+                      </p>
+                      <p className="text-sm flex items-center ml-10">
+                        <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
+                        {new Date(comment.reply.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}{" "}
+                        {new Date(comment.reply.created_at).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                      <div className="mt-1 text-lg ml-10">
+                        {comment.reply.comment_text}
+                      </div>
+                    </div>
+                  )}
+                  {replyingTo === comment._id && (
                     <div className="mt-2">
+                      <textarea
+                        className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[200%]"
+                        rows="3"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write your reply..."
+                      ></textarea>
                       <button
-                        className="text-yellow-700 font-semibold hidden group-hover:flex"
-                        onClick={() => handleReplyClick(comment._id)}
+                        className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
+                        onClick={() => handleSendReply(comment._id)}
                       >
-                        <FaReply className="mt-1 mr-1 " /> Reply
+                        Send Reply
                       </button>
                     </div>
-                    {replyingTo === comment._id && (
-                      <div className="mt-2">
-                        <textarea
-                          className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-[200%]"
-                          rows="3"
-                          value={replyText}
-                          onChange={(e) => setReplyText(e.target.value)}
-                          placeholder="Write your reply..."
-                        ></textarea>
-                        <button
-                          className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
-                          onClick={() => handleSendReply(comment._id)}
-                        >
-                          Send Reply
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               ))}
               {commentsToShow < postComments.length && (
