@@ -28,6 +28,28 @@ const PostDetails = () => {
     setReplyText(""); // Clear any previous reply text
   };
 
+  const fetchPostComments = async (p_id) => {
+    const postId = p_id;
+    try {
+      const response = await fetch(
+        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/post/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+  
+      const allComments = await response.json();
+      console.log(allComments); // Ensure this logs correctly formatted data.
+  
+      // Directly set fetched comments if they include replies.
+      setPostComments(allComments);
+      setTotalComments(allComments.length);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
+  
   const handleSendReply = async (commentId) => {
     // Prepare the reply object
     const newReply = {
@@ -37,7 +59,10 @@ const PostDetails = () => {
       comment_text: replyText, // The text of the reply
       reply_id: commentId, // The ID of the parent comment to which this is a reply
     };
-
+    console.log(newReply )
+    
+    console.log("Reply data being sent:", newReply); // Debugging: Log the reply object
+  
     try {
       const response = await fetch(
         "https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/",
@@ -49,18 +74,20 @@ const PostDetails = () => {
           body: JSON.stringify(newReply), // Send the reply data to the backend
         }
       );
-
+  
       if (!response.ok) {
-        throw new Error("Failed to send reply");
+        const errorData = await response.json(); // Get the error response data if available
+        console.error("Server responded with error:", errorData);
+        throw new Error("Failed to send reply: " + response.status);
       }
-
+  
       // Optionally, show a success message
-      toast.success("Reply added successfully!");
-
+      toast.success("Reply Sent successfully!");
+  
       // Clear the reply state and hide the reply input
       setReplyingTo(null);
       setReplyText("");
-
+  
       // Optionally, refresh comments to show the new reply
       fetchPostComments(id); // Fetch updated comments list after reply is added
     } catch (error) {
@@ -68,6 +95,7 @@ const PostDetails = () => {
       // Handle error, show error message or retry logic
     }
   };
+  
 
   // Function to fetch post likes and determine if the user has liked the post
   const fetchPostLikes = async () => {
@@ -77,7 +105,7 @@ const PostDetails = () => {
     try {
       // Fetch likes for the post to count total likes
       const response = await fetch(
-        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/post/${postId}`
+        `http://localhost:9001/post_like_tbl/post/${postId}`
       );
       if (!response.ok) {
         setPostLikes(0); // Set to 0 if fetch fails
@@ -91,7 +119,7 @@ const PostDetails = () => {
 
       // Check if the user has liked the post
       const userLikeResponse = await fetch(
-        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/user_post/${userId}/${postId}`
+        `http://localhost:9001/post_like_tbl/user_post/${userId}/${postId}`
       );
 
       if (userLikeResponse.ok) {
@@ -127,7 +155,7 @@ const PostDetails = () => {
     try {
       const requestBody = { post_id, user_id };
 
-      const response = await fetch("http://realcommoditytradingbackend.vercel.app/post_like_tbl", {
+      const response = await fetch("http://localhost:9001/post_like_tbl", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,7 +190,7 @@ const PostDetails = () => {
 
     try {
       const response = await fetch(
-        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/${user_id}/${post_id}`,
+        `http://localhost:9001/post_like_tbl/${user_id}/${post_id}`,
         {
           method: "DELETE",
           headers: {
@@ -275,32 +303,7 @@ const PostDetails = () => {
       // Handle error, show error message or retry logic
     }
   };
-  const fetchPostComments = async (p_id) => {
-    const postId = p_id;
-    try {
-      const response = await fetch(
-        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/post/${postId}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-  
-      const allComments = await response.json();
-  
-      const mainComments = allComments.filter(comment => !comment.reply_id);
-      const replies = allComments.filter(comment => comment.reply_id);
-  
-      const commentsWithReplies = mainComments.map(comment => ({
-        ...comment,
-        reply: replies.find(reply => reply.reply_id === comment._id) || null, 
-      }));
-  
-      setPostComments(commentsWithReplies);
-      setTotalComments(allComments.length); 
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+ 
   
 
   useEffect(() => {
@@ -506,113 +509,102 @@ const PostDetails = () => {
             </div>
 
             <div className="w-full bg-lime-50 p-4 border-t-2 border-gray-400">
-              <h2 className="font-semibold text-xl">
-                Comments: {totalComments}
-              </h2>
-              {postComments.slice(0, commentsToShow).map((comment, index) => (
-                <div className="mt-5 flex flex-col gap-2 group" key={index}>
-                  <div className="flex">
-                    <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600 mt-2" />
-                    <div className="ml-2">
-                      <p className="font-semibold text-lg capitalize">
-                        {comment.user_name}
-                      </p>
-                      <p className="text-sm flex items-center">
-                        <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
-                        {new Date(comment.created_at).toLocaleDateString(
-                          "en-US",
-                          {
-                            weekday: "short",
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}{" "}
-                        {new Date(comment.created_at).toLocaleTimeString(
-                          "en-US",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </p>
-                      <div className="mt-1 text-lg">{comment.comment_text}</div>
-                      {!comment.reply && (
-                        <div className="mt-2">
-                          <button
-                            className="text-yellow-700 font-semibold hidden group-hover:flex"
-                            onClick={() => handleReplyClick(comment._id)}
-                          >
-                            <FaReply className="mt-1 mr-1 " /> Reply
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {comment.reply && (
-                    <div className="ml-12 mt-3 p-2 bg-amber-100 rounded-md border border-gray-300">
-                      <div>
-                        
-                      </div>
-                      <p className="font-semibold text-sm capitalize flex">
-                      <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600" />
-                        <span className="mt-1.5 ml-1">{comment.reply.user_name}</span>
-                      </p>
-                      <p className="text-sm flex items-center ml-10">
-                        <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
-                        {new Date(comment.reply.created_at).toLocaleDateString(
-                          "en-US",
-                          {
-                            weekday: "short",
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}{" "}
-                        {new Date(comment.reply.created_at).toLocaleTimeString(
-                          "en-US",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </p>
-                      <div className="mt-1 text-lg ml-10">
-                        {comment.reply.comment_text}
-                      </div>
-                    </div>
-                  )}
-                  {replyingTo === comment._id && (
-                    
-                    <div className=" container mt-2">
-                      <textarea
-                        className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full "
-                        rows="3"
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        placeholder="Write your reply..."
-                      ></textarea>
-                      <button
-                        className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
-                        onClick={() => handleSendReply(comment._id)}
-                      >
-                        Send Reply
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-              {commentsToShow < postComments.length && (
-                <div className="flex justify-center mt-5">
-                  <button
-                    onClick={loadMoreComments}
-                    className="bg-gray-500 text-white font-semibold py-2 px-5 text-md rounded-lg hover:bg-lime-500 hover:shadow-lg transition-all ease-in-out duration-500"
-                  >
-                    Load More Comments...
-                  </button>
-                </div>
-              )}
+  <h2 className="font-semibold text-xl">Comments: {totalComments}</h2>
+  {postComments.slice(0, commentsToShow).map((comment, index) => (
+    <div className="mt-5 flex flex-col gap-2 group" key={index}>
+      <div className="flex">
+        <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600 mt-2" />
+        <div className="ml-2">
+          <p className="font-semibold text-lg capitalize">
+            {comment.user_name}
+          </p>
+          <p className="text-sm flex items-center">
+            <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
+            {new Date(comment.created_at).toLocaleDateString("en-US", {
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            {new Date(comment.created_at).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <div className="mt-1 text-lg">{comment.comment_text}</div>
+          
+            <div className="mt-2">
+              <button
+                className="text-yellow-700 font-semibold hidden group-hover:flex"
+                onClick={() => handleReplyClick(comment._id)}
+              >
+                <FaReply className="mt-1 mr-1 " /> Reply
+              </button>
             </div>
+          
+        </div>
+      </div>
+      {/* Check if there is a reply and render it */}
+      {comment.reply && (
+        <div className="ml-12 mt-3 p-2 bg-amber-100 rounded-md border border-gray-300">
+          <div className="flex items-center">
+            <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600" />
+            <span className="mt-1.5 ml-1 font-semibold text-sm capitalize">
+              {comment.reply.user_name}
+            </span>
+          </div>
+          <p className="text-sm flex items-center ml-10">
+            <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
+            {new Date(comment.reply.created_at).toLocaleDateString("en-US", {
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            {new Date(comment.reply.created_at).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <div className="mt-1 text-lg ml-10">
+            {comment.reply.comment_text}
+          </div>
+        </div>
+      )}
+      {/* Reply form section */}
+      {replyingTo === comment._id && (
+        <div className="container mt-2">
+          <textarea
+            className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full"
+            rows="3"
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder="Write your reply..."
+          ></textarea>
+          <button
+            className="bg-lime-600 hover:bg-lime-700 text-white px-3 py-1 mt-2 rounded"
+            onClick={() => handleSendReply(comment._id)}
+          >
+            Send Reply
+          </button>
+        </div>
+      )}
+    </div>
+  ))}
+  {/* Load More Button */}
+  {commentsToShow < postComments.length && (
+    <div className="flex justify-center mt-5">
+      <button
+        onClick={loadMoreComments}
+        className="bg-gray-500 text-white font-semibold py-2 px-5 text-md rounded-lg hover:bg-lime-500 hover:shadow-lg transition-all ease-in-out duration-500"
+      >
+        Load More Comments...
+      </button>
+    </div>
+  )}
+</div>
+
+
 
             <div className="mt-5 container">
               <form>
