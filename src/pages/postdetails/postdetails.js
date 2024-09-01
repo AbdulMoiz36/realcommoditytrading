@@ -53,19 +53,16 @@ const PostDetails = () => {
   const handleSendReply = async (commentId) => {
     // Prepare the reply object
     const newReply = {
-      post_id: id, // The post ID to which the comment belongs
       user_id: sessionStorage.getItem("userId"), // Fetch the user ID from session storage or state
       user_name: userName, // Assume userName is fetched from state or props
       comment_text: replyText, // The text of the reply
-      reply_id: commentId, // The ID of the parent comment to which this is a reply
     };
-    console.log(newReply )
-    
+  
     console.log("Reply data being sent:", newReply); // Debugging: Log the reply object
   
     try {
       const response = await fetch(
-        "https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/",
+        `https://realcommoditytradingbackend.vercel.app/post_comments_n_socials/${commentId}/reply`, // Use the new route for adding a reply
         {
           method: "POST",
           headers: {
@@ -96,6 +93,7 @@ const PostDetails = () => {
     }
   };
   
+  
 
   // Function to fetch post likes and determine if the user has liked the post
   const fetchPostLikes = async () => {
@@ -105,7 +103,7 @@ const PostDetails = () => {
     try {
       // Fetch likes for the post to count total likes
       const response = await fetch(
-        `http://localhost:9001/post_like_tbl/post/${postId}`
+        `https://realcommoditytradingbackend.vercel.app/post_like_tbl/post/${postId}`
       );
       if (!response.ok) {
         setPostLikes(0); // Set to 0 if fetch fails
@@ -119,7 +117,7 @@ const PostDetails = () => {
 
       // Check if the user has liked the post
       const userLikeResponse = await fetch(
-        `http://localhost:9001/post_like_tbl/user_post/${userId}/${postId}`
+        `https://realcommoditytradingbackend.vercel.app/post_like_tbl/user_post/${userId}/${postId}`
       );
 
       if (userLikeResponse.ok) {
@@ -155,7 +153,7 @@ const PostDetails = () => {
     try {
       const requestBody = { post_id, user_id };
 
-      const response = await fetch("http://localhost:9001/post_like_tbl", {
+      const response = await fetch("https://realcommoditytradingbackend.vercel.app/post_like_tbl", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +188,7 @@ const PostDetails = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:9001/post_like_tbl/${user_id}/${post_id}`,
+        `https://realcommoditytradingbackend.vercel.app/post_like_tbl/${user_id}/${post_id}`,
         {
           method: "DELETE",
           headers: {
@@ -532,43 +530,49 @@ const PostDetails = () => {
             })}
           </p>
           <div className="mt-1 text-lg">{comment.comment_text}</div>
-          
-            <div className="mt-2">
-              <button
-                className="text-yellow-700 font-semibold hidden group-hover:flex"
-                onClick={() => handleReplyClick(comment._id)}
-              >
-                <FaReply className="mt-1 mr-1 " /> Reply
-              </button>
-            </div>
-          
+
+          <div className="mt-2">
+            <button
+              className="text-yellow-700 font-semibold hidden group-hover:flex"
+              onClick={() => handleReplyClick(comment._id)}
+            >
+              <FaReply className="mt-1 mr-1 " /> Reply
+            </button>
+          </div>
         </div>
       </div>
-      {/* Check if there is a reply and render it */}
-      {comment.reply && (
-        <div className="ml-12 mt-3 p-2 bg-amber-100 rounded-md border border-gray-300">
-          <div className="flex items-center">
-            <IoPerson className="rounded-full bg-gray-300 text-4xl p-1 text-gray-600" />
-            <span className="mt-1.5 ml-1 font-semibold text-sm capitalize">
-              {comment.reply.user_name}
-            </span>
-          </div>
-          <p className="text-sm flex items-center ml-10">
-            <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
-            {new Date(comment.reply.created_at).toLocaleDateString("en-US", {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}{" "}
-            {new Date(comment.reply.created_at).toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
-          <div className="mt-1 text-lg ml-10">
-            {comment.reply.comment_text}
-          </div>
+      {/* Check if there are replies and render them */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="ml-12 ">
+          {comment.replies.map((reply, replyIndex) => (
+            <div
+              key={replyIndex}
+              className="p-2 bg-amber-100 rounded-md border border-gray-300 mb-2"
+            >
+              <div className="flex items-center">
+                <IoPerson className="rounded-full bg-gray-300 text-4xl p-1  text-gray-600" />
+                <span className="mt-1 ml-1 font-semibold text-sm capitalize">
+                  {reply.user_name}
+                </span>
+              </div>
+              <p className="text-sm flex items-center ml-10">
+                <LuCalendarClock className="text-lime-800 mt-1 mr-1" />
+                {new Date(reply.created_at).toLocaleDateString("en-US", {
+                  weekday: "short",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}{" "}
+                {new Date(reply.created_at).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+              <div className="mt-1 text-lg ml-10">
+                {reply.comment_text}
+              </div>
+            </div>
+          ))}
         </div>
       )}
       {/* Reply form section */}
@@ -603,8 +607,6 @@ const PostDetails = () => {
     </div>
   )}
 </div>
-
-
 
             <div className="mt-5 container">
               <form>
