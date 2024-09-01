@@ -77,7 +77,7 @@ const PostDetails = () => {
     try {
       // Fetch likes for the post to count total likes
       const response = await fetch(
-        `http://localhost:9001/post_like_tbl/post/${postId}`
+        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/post/${postId}`
       );
       if (!response.ok) {
         setPostLikes(0); // Set to 0 if fetch fails
@@ -91,7 +91,7 @@ const PostDetails = () => {
 
       // Check if the user has liked the post
       const userLikeResponse = await fetch(
-        `http://localhost:9001/post_like_tbl/user_post/${userId}/${postId}`
+        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/user_post/${userId}/${postId}`
       );
 
       if (userLikeResponse.ok) {
@@ -127,7 +127,7 @@ const PostDetails = () => {
     try {
       const requestBody = { post_id, user_id };
 
-      const response = await fetch("http://localhost:9001/post_like_tbl", {
+      const response = await fetch("http://realcommoditytradingbackend.vercel.app/post_like_tbl", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,7 +162,7 @@ const PostDetails = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:9001/post_like_tbl/${user_id}/${post_id}`,
+        `http://realcommoditytradingbackend.vercel.app/post_like_tbl/${user_id}/${post_id}`,
         {
           method: "DELETE",
           headers: {
