@@ -9,48 +9,37 @@ const Navbar = () => {
   const [categories, setCategories] = useState([]);
   const [categoryData, setCategoryData] = useState({});
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://realcommoditytradingbackend.vercel.app/categories/parent/0"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        const limitedData = data.slice(0,5);
-        setCategories(limitedData);
-
-        // Fetch data for each category
-        const dataPromises = data.map(async (category) => {
-          const response = await fetch(
-            `https://realcommoditytradingbackend.vercel.app/categories/parent/${category.id}`
-          );
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch data for category ${category._id}`
-            );
-          }
-          const categoryData = await response.json();
-          return { categoryId: category._id, data: categoryData };
-        });
-
-        // Wait for all data to be fetched
-        const resolvedData = await Promise.all(dataPromises);
-
-        // Organize fetched data into an object
-        const dataObject = {};
-        resolvedData.forEach(({ categoryId, data }) => {
-          dataObject[categoryId] = data;
-        });
-        setCategoryData(dataObject);
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle error, show error message or retry logic
+  const fetchData = async () => {
+    try {
+      // Fetch all categories with nested subcategories
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/categories"
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
       }
-    };
+      const data = await response.json();
+      
+      // Limit the number of categories if needed
+      const limitedData = data.slice(0, 5);
+      setCategories(limitedData);
+  
+      // No need to fetch subcategories separately as they are nested
+      const categoryData = {};
+      limitedData.forEach(category => {
+        categoryData[category._id] = category.subcategories;
+      });
+      setCategoryData(categoryData);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message or retry logic
+    }
+  };
+  
 
+  useEffect(() => {
+    
+    
     fetchData();
   }, []);
 
@@ -106,23 +95,23 @@ const Navbar = () => {
             </NavLink>
           </li>
           {categories.map((category) => (
-            <li key={category._id}>
-              <p className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1">
-              {category.name}
-              <IoMdArrowDropdown />
-              </p>
-            <ul>
-            {categoryData[category._id]?.map((item) => (
-              <li key={item._id}>
-                <NavLink to={`/product-offers/${item.id}`}>
-                  <p>{item.name}</p>
-                </NavLink>
-              </li>
-            ))}
-               
-            </ul>
-          </li>
-          ))}
+  <li key={category._id}>
+    <p className="hover:text-green-500 font-semibold lg:font-medium lg:text-[1vw] flex items-center gap-1">
+      {category.name}
+      <IoMdArrowDropdown />
+    </p>
+    <ul>
+      {category.subcategories.map((item) => (
+        <li key={item._id}>
+          <NavLink to={`/product-offers/${item._id}`}>
+            <p>{item.name}</p>
+          </NavLink>
+        </li>
+      ))}
+    </ul>
+  </li>
+))}
+
           
          
           <li>

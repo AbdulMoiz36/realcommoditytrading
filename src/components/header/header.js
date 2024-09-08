@@ -42,17 +42,30 @@ const Header = () => {
     // Clear session storage
     sessionStorage.removeItem("userId");
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user_type");
     // Hide modal
     setShowModal(false);
     setUserName("");
     // Redirect to homepage
     navigate("/");
     // Show toast
-    toast.success('Logged out successfully!');
+    toast.warn('You have been Logged out!');
   };
 
   return (
     <>
+   <ToastContainer
+position="bottom-right"
+autoClose={3500}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
       <div className="top-bar bg-blue-600 text-white h-7 overflow-x-hidden ">
         <div className="marquee-div flex flex-row gap-8">
           {topBarData.map((item, index) => (
@@ -148,18 +161,7 @@ const Header = () => {
           </div>
         </div>
       )}
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"
-      />
+      
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import Header from './components/header/header';
 import Home from './pages/home/home';
 import { Footer } from './components/footer/footer';
@@ -22,7 +22,7 @@ import reportWebVitals from './reportWebVitals';
 import Layout from './admin/pages/layout';
 import Dashboard from './admin/pages/dashboard';
 import Users from './admin/pages/users';
-
+import ProtectedRoute from './pages/auth/authentication';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -30,19 +30,21 @@ root.render(
     <UserProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<><Header /><Home /><Footer /></>} />
-          <Route path="/register" element={<><Header /><Register /><Footer /></>} />
-          <Route path="/login" element={<><Header /><Login /><Footer /></>} />
-          <Route path="/about" element={<><Header /><Aboutus /><Footer /></>} />
-          <Route path="/member-registration" element={<><Header /><MemberRegistration /><Footer /></>} />
-          <Route path="/partner-registration" element={<><Header /><PartnerRegistration /><Footer /></>} />
-          <Route path="/product-offers/:id" element={<><Header /><ProductOffers /><Footer /></>} />
-          <Route path="/post-details/:id" element={<><Header /><PostDetails /><Footer /></>} />
-          <Route path="/v-post-details/:id" element={<><Header /><VofferDetails /><Footer /></>} />
-          <Route path="/inquiry-verified-offers" element={<><Header /><InquiryVOffer /><Footer /></>} />
-          <Route path="/inquiry-partner-program" element={<><Header /><InquiryPartnerProgram /><Footer /></>} />
-          <Route path="/inquiry-website-issues" element={<><Header /><InquiryWebsiteIssues /><Footer /></>} />
-          <Route path="/inquiry-others" element={<><Header /><InquiryOthers /><Footer /></>} />
+          <Route path="/" element={<><Header /><Outlet/><Footer /></>} >
+          <Route path="" index element={<><Home /></>} />
+          <Route path="/register" element={<><Register /></>} />
+          <Route path="/login" element={<><Login /></>} />
+          <Route path="/about" element={<><Aboutus /></>} />
+          <Route path="/member-registration" element={<><ProtectedRoute><MemberRegistration /></ProtectedRoute></>} />
+          <Route path="/partner-registration" element={<><ProtectedRoute><PartnerRegistration /></ProtectedRoute></>} />
+          <Route path="/product-offers/:id" element={<><ProtectedRoute><ProductOffers /></ProtectedRoute></>} />
+          <Route path="/post-details/:id" element={<><ProtectedRoute><PostDetails /></ProtectedRoute></>} />
+          <Route path="/v-post-details/:id" element={<><ProtectedRoute><VofferDetails /></ProtectedRoute></>} />
+          <Route path="/inquiry-verified-offers" element={<><InquiryVOffer /></>} />
+          <Route path="/inquiry-partner-program" element={<><InquiryPartnerProgram /></>} />
+          <Route path="/inquiry-website-issues" element={<><InquiryWebsiteIssues /></>} />
+          <Route path="/inquiry-others" element={<><InquiryOthers /></>} />
+          </Route>
 
           {/* Admin Routes */}
           {/* <Route path="/admin" element={<><Navbar /><Dashboard /></>} /> */}

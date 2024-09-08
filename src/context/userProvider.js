@@ -7,6 +7,7 @@ export const useUser = () => useContext(UserContext);
 export const UserProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [userType, setUserType] = useState("");
   const userId = sessionStorage.getItem("userId");
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export const UserProvider = ({ children }) => {
           // Set the user's first name
           setUserName(data.first_name);
           setUserEmail(data.email);
+          setUserType(data.userType);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -25,7 +27,7 @@ export const UserProvider = ({ children }) => {
   }, [userId]);
 
   return (
-    <UserContext.Provider value={{ userName, setUserName, userEmail, setUserEmail }}>
+    <UserContext.Provider value={{ userName, setUserName, userEmail, setUserEmail, userType, setUserType}}>
       {children}
     </UserContext.Provider>
 

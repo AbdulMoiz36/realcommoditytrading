@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./partner-registration.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaCaretDown } from "react-icons/fa";
 const MemberRegistration = () => {
+  const navigate = useNavigate();
+  const userId = sessionStorage.getItem("userId");
   const [companyName, setCompanyName] = useState("");
   const [companyWebsite, setCompanyWebsite] = useState("");
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
-  const [companyRegistrationCopy, setCompanyRegistrationCopy] = useState(null);
-  const [passportCopy, setPassportCopy] = useState(null);
+  const [companyRegistrationCopy, setCompanyRegistrationCopy] = useState("");
+  const [passportCopy, setPassportCopy] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [telephoneNumber, setTelephoneNumber] = useState("");
   const [country, setCountry] = useState("");
@@ -30,71 +36,167 @@ const MemberRegistration = () => {
   const [correspondentBankName, setCorrespondentBankName] = useState("");
   const [bicCode, setBicCode] = useState("");
   const [otherSuggestions, setOtherSuggestions] = useState("");
-  const [resume, setResume] = useState(null);
-  const [profile, setProfile] = useState(null);
+  const [resume, setResume] = useState("");
+  const [profile, setProfile] = useState("");
 
   const [categories, setCategories] = useState([]);
   const [categoryData, setCategoryData] = useState({});
+  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [selectedRoles, setSelectedRoles] = useState({});
+
+  const [countries, setCountries] = useState([]);
+
+  
+
+  const snsOptions = [
+    { value: "none", label: "None" },
+    { value: "whatsapp", label: "Whatsapp" },
+    { value: "wechat", label: "Wechat" },
+    { value: "skype", label: "Skype" },
+    { value: "telegram", label: "Telegram" },
+    { value: "line", label: "Line" },
+  ];
+
+  const fetchData = async () => {
+    try {
+      // Fetch categories with their nested subcategories
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/categories"
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = await response.json();
+      setCategories(data); // Assuming data includes categories and their subcategories
+
+      console.log("Categories with nested subcategories:", data);
+
+      // You can organize the data into an object if necessary
+      const dataObject = {};
+      data.forEach((category) => {
+        dataObject[category._id] = category.subcategories || []; // Store subcategories
+      });
+
+      setCategoryData(dataObject);
+      console.log("Organized category data:", dataObject);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message, or retry logic
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`http://localhost:9001/users/${userId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      
+      setfirstName(data.first_name);
+      setlastName(data.last_name);
+      
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+    }
+  };
+  const fetchCountries = async () => {
+    try {
+      const response = await fetch("https://restcountries.com/v3.1/all");
+      if (!response.ok) {
+        throw new Error("Failed to fetch countries");
+      }
+      const data = await response.json();
+      // Sort countries by name
+      const sortedCountries = data.sort((a, b) =>
+        a.name.common.localeCompare(b.name.common)
+      );
+      setCountries(sortedCountries);
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+    }
+  };
+
+  const handleCheckboxChange = (id, role, isChecked) => {
+    setSelectedRoles((prevState) => ({
+      ...prevState,
+      [id]: {
+        ...prevState[id],
+        [role]: isChecked,
+      },
+    }));
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch top-level categories
-        const response = await fetch("https://realcommoditytradingbackend.vercel.app/categories/parent/0");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setCategories(data);
-        console.log("Top-level categories:", data);
     
-        // Fetch data for each category
-        const dataPromises = data.map(async (category) => {
-          try {
-            const categoryResponse = await fetch(`https://realcommoditytradingbackend.vercel.app/categories/parent/${category.id}`);
-            if (!categoryResponse.ok) {
-              throw new Error(`Failed to fetch data for category ${category.id}`);
-            }
-            const categoryData = await categoryResponse.json();
-            console.log(`Data for category ${category.id}:`, categoryData);
-            return { categoryId: category.id, data: categoryData };
-          } catch (categoryError) {
-            console.error(`Error fetching data for category ${category.id}:`, categoryError);
-            return { categoryId: category.id, data: [] }; // Return an empty array or suitable fallback
-          }
-        });
-    
-        // Wait for all data to be fetched
-        const resolvedData = await Promise.all(dataPromises);
-    
-        // Organize fetched data into an object
-        const dataObject = {};
-        resolvedData.forEach(({ categoryId, data }) => {
-          dataObject[categoryId] = data;
-        });
-        setCategoryData(dataObject);
-        console.log("Organized category data:", dataObject);
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle error, show error message or retry logic
-      }
-    };
-    
+    fetchUser();
     fetchData();
-    
+    fetchCountries();
     // window.scrollTo(0, 0);
   }, []);
-
-  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const toggleCategory = (categoryId) => {
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    // Create a FormData object to hold all the form data, including files
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('company_name', companyName);
+    formData.append('company_website', companyWebsite);
+    formData.append('first_name', firstName);
+    formData.append('last_name', lastName);
+    formData.append('company_registration_copy', companyRegistrationCopy); // File
+    formData.append('passport_copy', passportCopy); // File
+    formData.append('mobile_number', mobileNumber);
+    formData.append('telephone_number', telephoneNumber);
+    formData.append('country', country);
+    formData.append('city', city);
+    formData.append('sns1', sns1);
+    formData.append('sns2', sns2);
+    formData.append('sns1_id', sns1Id);
+    formData.append('sns2_id', sns2Id);
+    formData.append('selected_roles', JSON.stringify(selectedRoles)); // Convert object to string
+    formData.append('bank_name', bankName);
+    formData.append('bank_address', bankAddress);
+    formData.append('swiss_code', swissCode);
+    formData.append('bank_account_name', bankAccountName);
+    formData.append('bank_account_number', bankAccountNumber);
+    formData.append('bank_telephone_number', bankTelephoneNumber);
+    formData.append('bank_fax_number', bankFaxNumber);
+    formData.append('bank_officer_name', bankOfficerName);
+    formData.append('bank_officer_email', bankOfficerEmail);
+    formData.append('bank_website', bankWebsite);
+    formData.append('correspondent_bank_name', correspondentBankName);
+    formData.append('bic_code', bicCode);
+    formData.append('other_suggestions', otherSuggestions);
+    formData.append('resume', resume); // File
+    formData.append('profile', profile); // File
+
+    
+    // Send the formData to the backend (POST request)
+    try {
+      const response = await fetch('http://localhost:9001/partner_registrations', {
+          method: 'POST',
+          body: formData, // Send FormData directly
+      });
+
+      if (response.ok) {
+          toast.success('You are now our Partner.');
+          navigate('/');
+      } else {
+          toast.error('Error: ' + response.statusText);
+      }
+  } catch (error) {
+      toast.error('Error: ' + error.message);
+      console.error('Error:', error);
+  }
+};
+
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -193,9 +295,14 @@ const MemberRegistration = () => {
                 onChange={(e) => setCountry(e.target.value)}
               >
                 <option value="">Select Country</option>
-                <option value="1">Country 1</option>
-                <option value="2">Country 2</option>
-                <option value="3">Country 3</option>
+                {countries.map((countryItem) => (
+                  <option
+                    key={countryItem.cca3}
+                    value={countryItem.name.common}
+                  >
+                    {countryItem.name.common}
+                  </option>
+                ))}
               </select>
               <label htmlFor="city">City</label>
               <input
@@ -211,42 +318,52 @@ const MemberRegistration = () => {
               <select
                 name="sns1"
                 id="sns1"
-                value={sns1Id}
+                value={sns1}
                 onChange={(e) => setSns1(e.target.value)}
               >
-                <option value="">Select SNS1</option>
-                <option value="1">SNS1 Option 1</option>
-                <option value="2">SNS1 Option 2</option>
-                <option value="3">SNS1 Option 3</option>
+                {snsOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value === sns2}
+                  >
+                    {option.label}
+                  </option>
+                ))}
               </select>
               <label htmlFor="sns2">SNS2</label>
               <select
                 name="sns2"
                 id="sns2"
-                value={sns2Id}
+                value={sns2}
                 onChange={(e) => setSns2(e.target.value)}
               >
-                <option value="">Select SNS2</option>
-                <option value="1">SNS2 Option 1</option>
-                <option value="2">SNS2 Option 2</option>
-                <option value="3">SNS2 Option 3</option>
+                {snsOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value === sns1}
+                  >
+                    {option.label}
+                  </option>
+                ))}
               </select>
-              <label htmlFor="sns1Id">SNS 1 : ****</label>
+              <label htmlFor="sns1Id">SNS 1 :</label>
               <input
                 type="text"
                 id="sns1Id"
                 className="border"
                 placeholder="Enter Your ID"
-                value={sns1}
+                value={sns1Id}
                 onChange={(e) => setSns1Id(e.target.value)}
               />
-              <label htmlFor="sns2Id">SNS 2 : ****</label>
+              <label htmlFor="sns2Id">SNS 2 :</label>
               <input
                 type="text"
                 id="sns2Id"
                 className="border"
                 placeholder="Enter Your ID"
-                value={sns2}
+                value={sns2Id}
                 onChange={(e) => setSns2Id(e.target.value)}
               />
             </div>
@@ -255,165 +372,90 @@ const MemberRegistration = () => {
               <h2>Please select all of your trade roles below:</h2>
               <p>Click ⮟ to open product list</p>
               {categories.map((category) => (
-                <>
-                  <div className="flex gap-2" key={category._id}>
-                    <p
-                      className="cursor-pointer font-bold text-yellow-500"
-                      onClick={() => toggleCategory(category._id)}
-                    >
+                <React.Fragment key={category._id}>
+                  <div
+                    className="flex gap-2"
+                    onClick={() => toggleCategory(category._id)}
+                  >
+                    <p className="cursor-pointer font-bold text-yellow-500">
                       {category.name}
                     </p>
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => toggleCategory(category._id)}
-                    >
-                      Drop
-                    </span>
+                    <FaCaretDown className="mt-1 cursor-pointer" />
                   </div>
                   <div className="flex gap-4">
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_seller`}
-                        id={`category_${category._id}_seller`}
-                      />
-
-                      <label htmlFor={`category_${category._id}_seller`}>
-                        Seller
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_buyer`}
-                        id={`category_${category._id}_buyer`}
-                      />
-                      <label htmlFor={`category_${category._id}_buyer`}>
-                        Buyer
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_financier`}
-                        id={`category_${category._id}_financier`}
-                      />
-                      <label htmlFor={`category_${category._id}_financier`}>
-                        Financier
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_seller_mendate`}
-                        id={`category_${category._id}_seller_mendate`}
-                      />
-                      <label
-                        htmlFor={`category_${category._id}_seller_mendate`}
-                      >
-                        Seller Mandate
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_buyer_mendate`}
-                        id={`category_${category._id}_buyer_mendate`}
-                      />
-                      <label htmlFor={`category_${category._id}_buyer_mendate`}>
-                        Buyer Mandate
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        name={`category_${category._id}_financier_mendate`}
-                        id={`category_${category._id}_financier_mendate`}
-                      />
-                      <label
-                        htmlFor={`category_${category._id}_financier_mendate`}
-                      >
-                        Financier Mandate
-                      </label>
-                    </div>
+                    {[
+                      "seller",
+                      "buyer",
+                      "financier",
+                      "seller_mandate",
+                      "buyer_mandate",
+                      "financier_mandate",
+                    ].map((role) => (
+                      <div key={`${category._id}_${role}`}>
+                        <input
+                          type="checkbox"
+                          name={`category_${category._id}_${role}`}
+                          id={`category_${category._id}_${role}`}
+                          checked={selectedRoles[category._id]?.[role] || false}
+                          onChange={(e) =>
+                            handleCheckboxChange(
+                              category._id,
+                              role,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <label htmlFor={`category_${category._id}_${role}`}>
+                          {role
+                            .replace("_", " ")
+                            .replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                   {expandedCategory === category._id && (
                     <>
                       {categoryData[category._id]?.map((item) => (
                         <div key={item._id}>
-                          <div>
-                            <p className="font-bold" key={item._id}>
-                              {item.name}
-                            </p>
-                          </div>
+                          <p className="font-bold">{item.name}</p>
                           <div className="flex gap-4">
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_seller`}
-                                id={`item_${item._id}_seller`}
-                              />
-
-                              <label htmlFor={`item_${item._id}_seller`}>
-                                Seller
-                              </label>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_buyer`}
-                                id={`item_${item._id}_buyer`}
-                              />
-                              <label htmlFor={`item_${item._id}_buyer`}>
-                                Buyer
-                              </label>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_financier`}
-                                id={`item_${item._id}_financier`}
-                              />
-                              <label htmlFor={`item_${item._id}_financier`}>
-                                Financier
-                              </label>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_seller_mendate`}
-                                id={`item_${item._id}_seller_mendate`}
-                              />
-                              <label htmlFor={`item_${item._id}_seller_mendate`}>
-                                Seller Mandate
-                              </label>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_buyer_mendate`}
-                                id={`item_${item._id}_buyer_mendate`}
-                              />
-                              <label htmlFor={`item_${item._id}_buyer_mendate`}>
-                                Buyer Mandate
-                              </label>
-                            </div>
-                            <div>
-                              <input
-                                type="checkbox"
-                                name={`item_${item._id}_financier_mendate`}
-                                id={`item_${item._id}_financier_mendate`}
-                              />
-                              <label htmlFor={`item_${item._id}_se_financier_mendateller`}>
-                                Financier Mandate
-                              </label>
-                            </div>
+                            {[
+                              "seller",
+                              "buyer",
+                              "financier",
+                              "seller_mandate",
+                              "buyer_mandate",
+                              "financier_mandate",
+                            ].map((role) => (
+                              <div key={`${item._id}_${role}`}>
+                                <input
+                                  type="checkbox"
+                                  name={`item_${item._id}_${role}`}
+                                  id={`item_${item._id}_${role}`}
+                                  checked={
+                                    selectedRoles[item._id]?.[role] || false
+                                  }
+                                  onChange={(e) =>
+                                    handleCheckboxChange(
+                                      item._id,
+                                      role,
+                                      e.target.checked
+                                    )
+                                  }
+                                />
+                                <label htmlFor={`item_${item._id}_${role}`}>
+                                  {role
+                                    .replace("_", " ")
+                                    .replace(/\b\w/g, (l) => l.toUpperCase())}
+                                </label>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ))}
                     </>
                   )}
-                </>
+                </React.Fragment>
               ))}
               <div className="flex flex-col">
                 <label htmlFor="other_description">

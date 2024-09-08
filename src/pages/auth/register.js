@@ -13,6 +13,7 @@ const Register = () => {
     confirmPassword: '',
     firstName: '',
     lastName: '',
+    user_type: 'user'
   });
   const [agreeTerms, setAgreeTerms] = useState(false); // New state for agreeTerms checkbox
 
@@ -48,6 +49,9 @@ const Register = () => {
       if (!response.ok) {
         throw new Error(responseData.msg || 'Failed to create user!');
       } else {
+        // Save the user ID to sessionStorage to log in the user
+      sessionStorage.setItem('userId', responseData._id);
+      sessionStorage.setItem('user_type', responseData.user_type);
         // Show success toast message
         toast.success('Registered successfully!');
         // Clear the form data
