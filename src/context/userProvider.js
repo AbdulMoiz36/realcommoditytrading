@@ -18,11 +18,15 @@ export const UserProvider = ({ children }) => {
           // Set the user's first name
           setUserName(data.first_name);
           setUserEmail(data.email);
-          setUserType(data.userType);
+          setUserType(data.user_type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
         });
+    }else{
+      setUserEmail();
+      setUserName();
+      setUserType();
     }
   }, [userId]);
 

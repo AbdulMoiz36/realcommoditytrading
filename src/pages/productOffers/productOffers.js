@@ -167,7 +167,7 @@ const ProductOffers = () => {
             <Button
               text="Request a verified offer post"
               color="blue"
-              link="#"
+              link={`/create-verified-post/${id}`}
             />
           </div>
           <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">
@@ -182,7 +182,7 @@ const ProductOffers = () => {
             <Button
               text="Create a New Offer Post"
               color="yellow"
-              link="#"
+              link={`/create-post/${id}`}
             />
           </div>
           <div className="overflow-x-auto rounded-t-2xl w-full mt-20 md:mt-0">

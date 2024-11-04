@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import "./partner-registration.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaCaretDown } from "react-icons/fa";
+import { useUser } from "../../context/userProvider";
 const MemberRegistration = () => {
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
@@ -46,7 +46,8 @@ const MemberRegistration = () => {
 
   const [countries, setCountries] = useState([]);
 
-  
+  const { setUserType } = useUser();
+
 
   const snsOptions = [
     { value: "none", label: "None" },
@@ -118,16 +119,29 @@ const MemberRegistration = () => {
     }
   };
 
-  const handleCheckboxChange = (id, role, isChecked) => {
-    setSelectedRoles((prevState) => ({
-      ...prevState,
-      [id]: {
-        ...prevState[id],
-        [role]: isChecked,
-      },
-    }));
-  };
+  const handleCheckboxChange = (id, role, isChecked, isMainCategory) => {
+    setSelectedRoles((prevState) => {
+      const updatedRoles = {
+        ...prevState,
+        [id]: {
+          ...prevState[id],
+          [role]: isChecked,
+        },
+      };
 
+      if (isMainCategory && categoryData[id]) {
+        // If it's a main category, automatically check/uncheck the subcategories
+        categoryData[id].forEach((subcategory) => {
+          updatedRoles[subcategory._id] = {
+            ...updatedRoles[subcategory._id],
+            [role]: isChecked, // Apply the same checked state to subcategories
+          };
+        });
+      }
+
+      return updatedRoles;
+    });
+  };
   useEffect(() => {
     
     fetchUser();
@@ -177,7 +191,6 @@ const MemberRegistration = () => {
     formData.append('resume', resume); // File
     formData.append('profile', profile); // File
 
-    
     // Send the formData to the backend (POST request)
     try {
       const response = await fetch('http://localhost:9001/partner_registrations', {
@@ -186,16 +199,34 @@ const MemberRegistration = () => {
       });
 
       if (response.ok) {
-          toast.success('You are now our Partner.');
-          navigate('/');
+          // If the registration was successful, update the user type
+          const updateUserTypeResponse = await fetch(`http://localhost:9001/users/${userId}`, {
+              method: 'PATCH',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ user_type: 'partner' }),
+          });
+
+          if (updateUserTypeResponse.ok) {
+              // Update sessionStorage
+              sessionStorage.setItem('user_type', 'partner');
+              setUserType('partner');
+
+              toast.success('You are now our Partner.');
+              navigate('/');
+          } else {
+              toast.error('Error updating user type: ' + updateUserTypeResponse.statusText);
+          }
       } else {
           toast.error('Error: ' + response.statusText);
       }
-  } catch (error) {
-      toast.error('Error: ' + error.message);
-      console.error('Error:', error);
-  }
+    } catch (error) {
+        toast.error('Error: ' + error.message);
+        console.error('Error:', error);
+    }
 };
+
 
 
   return (
@@ -401,7 +432,8 @@ const MemberRegistration = () => {
                             handleCheckboxChange(
                               category._id,
                               role,
-                              e.target.checked
+                              e.target.checked,
+                              true // This is the main category checkbox
                             )
                           }
                         />
@@ -413,6 +445,7 @@ const MemberRegistration = () => {
                       </div>
                     ))}
                   </div>
+
                   {expandedCategory === category._id && (
                     <>
                       {categoryData[category._id]?.map((item) => (
@@ -439,7 +472,8 @@ const MemberRegistration = () => {
                                     handleCheckboxChange(
                                       item._id,
                                       role,
-                                      e.target.checked
+                                      e.target.checked,
+                                      false
                                     )
                                   }
                                 />

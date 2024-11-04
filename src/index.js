@@ -23,6 +23,8 @@ import Layout from './admin/pages/layout';
 import Dashboard from './admin/pages/dashboard';
 import Users from './admin/pages/users';
 import ProtectedRoute from './pages/auth/authentication';
+import Createpost from './pages/create-post/create-post';
+import CreateVerifiedPost from './pages/create-verified-post/create-verified-post';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -40,6 +42,10 @@ root.render(
           <Route path="/product-offers/:id" element={<><ProtectedRoute><ProductOffers /></ProtectedRoute></>} />
           <Route path="/post-details/:id" element={<><ProtectedRoute><PostDetails /></ProtectedRoute></>} />
           <Route path="/v-post-details/:id" element={<><ProtectedRoute><VofferDetails /></ProtectedRoute></>} />
+          <Route path="/create-post" element={<><ProtectedRoute><Createpost /></ProtectedRoute></>} />
+          <Route path="/create-post/:id" element={<><ProtectedRoute><Createpost /></ProtectedRoute></>} />
+          <Route path="/create-verified-post" element={<><ProtectedRoute><CreateVerifiedPost /></ProtectedRoute></>} />
+          <Route path="/create-verified-post/:id" element={<><ProtectedRoute><CreateVerifiedPost /></ProtectedRoute></>} />
           <Route path="/inquiry-verified-offers" element={<><InquiryVOffer /></>} />
           <Route path="/inquiry-partner-program" element={<><InquiryPartnerProgram /></>} />
           <Route path="/inquiry-website-issues" element={<><InquiryWebsiteIssues /></>} />

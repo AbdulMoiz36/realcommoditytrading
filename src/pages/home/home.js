@@ -10,6 +10,10 @@ import { NavLink } from "react-router-dom";
 import DataTable from "../../components/datatable";
 import { FaRegHeart, FaRegCommentAlt } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
+import { toast } from 'react-toastify';
+import { useUser } from "../../context/userProvider";
+
+
 
 const accordianItems = [
   {
@@ -78,12 +82,12 @@ const accordianItems = [
     title: "What happens to the documents that I share?",
     content:
       "Your documents are secure with us - they remain securely encrypted and stored offline only. We guarantee that your documents won't ever become public without your expressed permission. They will immediately be destroyed upon your request.",
-  },
-  {
-    title: "What are an inquiry and counteroffer on a Verified Offer Post?",
-    content:
+    },
+    {
+      title: "What are an inquiry and counteroffer on a Verified Offer Post?",
+      content:
       "If you find a Verified Offer that suits your needs, it's easy to send us an inquiry or even counteroffer directly through us. All you need is Previous Record(s), Proof of Product(s), or evidence of available funds - just submit the form and we'll take care of the rest!",
-  },
+    },
   {
     title: "What is the cost of service charges?",
     content: (
@@ -139,12 +143,13 @@ const accordianItems = [
 const Home = () => {
   const [vOffers, setvOffers] = useState([]);
   const [posts, setposts] = useState([]);
-
+  const { userType } = useUser();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchVerifiedOffers();
     fetchPosts();
-  }, []);
+  }, [userType]);
 
   const fetchVerifiedOffers = async () => {
     try {
@@ -291,6 +296,10 @@ const Home = () => {
       },
     },
   ];
+  const partnerToast = () => {
+    toast.success("You are already registered as our partner");
+  };
+  
 
   return (
     <>
@@ -305,7 +314,7 @@ const Home = () => {
             of partners for companies who request us with Previous Records,
             Proof of Products or Funds.
           </h4>
-          <Button text="Join Us As A Partner" color="yellow" link="/partner-registration" />
+          {userType !== 'partner' || !userType ? <Button text="Join Us As A Partner" color="yellow" link="/partner-registration" /> : <span onClick={partnerToast}><Button text="You're Our Partner" color="yellow"  /></span>}
           <p className="font-bold quick-guide">
             Win $100,00 <NavLink href="#"> Find More &gt;</NavLink>
           </p>

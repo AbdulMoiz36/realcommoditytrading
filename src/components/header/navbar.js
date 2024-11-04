@@ -7,7 +7,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [categories, setCategories] = useState([]);
-  const [categoryData, setCategoryData] = useState({});
 
   const fetchData = async () => {
     try {
@@ -29,7 +28,6 @@ const Navbar = () => {
       limitedData.forEach(category => {
         categoryData[category._id] = category.subcategories;
       });
-      setCategoryData(categoryData);
     } catch (error) {
       console.error("Error:", error);
       // Handle error, show error message or retry logic

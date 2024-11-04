@@ -6,9 +6,10 @@ const PartnerAuthentication = ({ children }) => {
   const isAuthenticated = sessionStorage.getItem('user_type');
   const toastDisplayed = useRef(false); // This ensures toast shows only once
 
+
   useEffect(() => {
-    if (isAuthenticated == 'partner' && !toastDisplayed.current) {
-      toast.warning("Please login");
+    if (isAuthenticated != 'partner' && !toastDisplayed.current) {
+      toast.warning("Please register as Partner");
       toastDisplayed.current = true; // Prevents further toasts from showing
     }
   }, [isAuthenticated]);
@@ -16,7 +17,7 @@ const PartnerAuthentication = ({ children }) => {
   return isAuthenticated ? (
     children
   ) : (
-    <Navigate to="/login" state={{ message: 'Please login first' }} />
+    <Navigate to="/partner-registration" />
   );
 };
 

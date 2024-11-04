@@ -7,6 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from '../../context/userProvider';
+import { useLenis } from '../useLenis';
 
 const Header = () => {
   const [topBarData, setTopBarData] = useState([]);
@@ -51,6 +52,8 @@ const Header = () => {
     // Show toast
     toast.warn('You have been Logged out!');
   };
+  useLenis(); 
+
 
   return (
     <>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { useUser } from "../../context/userProvider";
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -16,6 +17,7 @@ const Register = () => {
     user_type: 'user'
   });
   const [agreeTerms, setAgreeTerms] = useState(false); // New state for agreeTerms checkbox
+  const { setUserName,setUserType } = useUser();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -28,7 +30,7 @@ const Register = () => {
       if (!formData.email || !formData.password || !formData.confirmPassword || !formData.firstName || !formData.lastName ) {
         throw new Error("All fields are required!");
       }
-  
+      
       // Additional validation checks, e.g., password match
       if (formData.password !== formData.confirmPassword) {
         throw new Error("Passwords do not match!");
@@ -53,7 +55,48 @@ const Register = () => {
       sessionStorage.setItem('userId', responseData._id);
       sessionStorage.setItem('user_type', responseData.user_type);
         // Show success toast message
-        toast.success('Registered successfully!');
+        const email = formData.email;
+        const password = formData.password;
+
+        
+        // Proceed with login process
+      const response = await fetch(
+        "https://realcommoditytradingbackend.vercel.app/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password}),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.msg || "Failed to login");
+      }
+      // Show success toast message
+      toast.success('Registered successfully!');
+      // Set user ID and token in session storage
+      sessionStorage.setItem("userId", data.userId);
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("user_type", data.user_type);
+     
+      // Fetch user data using the stored user ID
+      const userId = data.userId;
+      if (userId) {
+        fetch(`https://realcommoditytradingbackend.vercel.app/users/${userId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Set the user's first name
+            setUserName(data.first_name)
+            setUserType(data.user_type);
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          });
+      }
+
+        // Redirect to the login page
         // Clear the form data
         setFormData({
           email: '',
@@ -64,8 +107,7 @@ const Register = () => {
         });
         // Reset the agreeTerms checkbox
         setAgreeTerms(false);
-        // Redirect to the login page
-        navigate('/login');
+        navigate('/');
         window.scrollTo(0, 0);
       }
     } catch (error) {
