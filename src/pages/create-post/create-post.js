@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useUser } from "../../context/userProvider";
 
 const Createpost = () => {
   const userId = sessionStorage.getItem("userId");
+  const offer_type = "1";
   const [offerStatus, setOfferStatus] = useState("");
   const [title, setTitle] = useState("");
   const [origin, setOrigin] = useState("");
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [subCategory, setSubCategory] = useState("");
   const [quantity, setQuantity] = useState("");
   const [contract, setContract] = useState("");
@@ -27,14 +30,14 @@ const Createpost = () => {
   const [total, setTotal] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState("");
-
-  
-
+  // Find the selected category and extract subcategories
+  const selectedCategory = categories.find((cat) => cat.name === category);
+  const subCategories = selectedCategory ? selectedCategory.subcategories : [];
 
   const handleInspectionChange = (e) => {
     const { value, checked } = e.target;
     let updatedInspections;
-  
+
     if (checked) {
       updatedInspections = [...inspections, value];
     } else {
@@ -42,30 +45,110 @@ const Createpost = () => {
         (inspection) => inspection !== value
       );
     }
-  
+
     setInspections(updatedInspections);
   };
   const handleIncotermChange = (e) => {
     const { value, checked } = e.target;
     let updatedIncoterm;
-  
+
     if (checked) {
       updatedIncoterm = [...incoterms, value];
     } else {
-      updatedIncoterm = incoterms.filter(
-        (incoterm) => incoterm !== value
-      );
+      updatedIncoterm = incoterms.filter((incoterm) => incoterm !== value);
     }
-  
+
     setIncoterms(updatedIncoterm);
     console.log(updatedIncoterm); // Logs the correct updated state
   };
-  
+
+  useEffect(() => {
+    // Fetch categories from the backend
+    fetch("http://localhost:9001/categories/")
+      .then((response) => response.json())
+      .then((data) => setCategories(data))
+      .catch((error) => console.error("Error fetching categories:", error));
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
+  
+    const form = e.target; // Reference to the form element
+  
+    const formData = new FormData();
+    formData.append("user_id", userId);
+    formData.append("offer_type", offer_type);
+    formData.append("offer_status", offerStatus);
+    formData.append("post_title", title);
+    formData.append("goods_market_name", origin);
+    formData.append("type_specification", type);
+    formData.append("category_id", category);
+    formData.append("subcat_id", subCategory);
+    formData.append("quantity_min_and_max", quantity);
+    formData.append("duration_of_contract", contract);
+    formData.append("discharging_port_name", discharging);
+    formData.append("discharging_port_city", dischargingCity);
+    formData.append("discharging_port_country", dischargingCountry);
+    formData.append("loading_port_name", loading);
+    formData.append("loading_port_city", loadingCity);
+    formData.append("loading_port_country", loadingCountry);
+    formData.append("loading_port_payment", payment);
+    formData.append("performance_bond", performance);
+    formData.append("inspection", inspections);
+    formData.append("inspection_describe_other", otherInspection);
+    formData.append("incoterm_describe_other", otherIncoterms);
+    formData.append("price", price);
+    formData.append("seller_agent_fees", commission);
+    formData.append("total_of", total);
+    formData.append("description", description);
+  
+    // Add file if it exists
+    if (file) {
+      formData.append("file_name", file);
+    }
+  
+    fetch("http://localhost:9001/post", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Post created successfully:", data);
+  
+        // Clear the form values
+        form.reset(); // Clear all input fields in the form
+  
+        // Reset local state variables if used
+        setOfferStatus("");
+        setTitle("");
+        setOrigin("");
+        setType("");
+        setCategory("");
+        setSubCategory("");
+        setQuantity("");
+        setContract("");
+        setDischarging("");
+        setDischargingCity("");
+        setDischargingCountry("");
+        setLoading("");
+        setLoadingCity("");
+        setLoadingCountry("");
+        setPayment("");
+        setPerformance("");
+        setInspections("");
+        setOtherInspection("");
+        setOtherIncoterms("");
+        setPrice("");
+        setCommission("");
+        setTotal("");
+        setDescription("");
+        setFile(null);
+      })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      });
   };
+  
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -75,9 +158,8 @@ const Createpost = () => {
             Create Post Offer
           </h1>
         </div>
-        <div>
-          <form className="" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-5">
+        <div className="flex">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <label htmlFor="offerStatus">
                 Offer Status Selection{" "}
                 <span className="text-red-600 font-bold">*</span>
@@ -123,30 +205,37 @@ const Createpost = () => {
                 </label>
               </div>
 
+            
+              <div className="flex flex-col  gap-4">
               <label htmlFor="title">
                 Title <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="title"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Title Can't be edited after submission"
                 value={title}
                 required
                 onChange={(e) => setTitle(e.target.value)}
-              />
+                />
+                </div>
+
+                <div className="flex-1 gap-4">
               <label htmlFor="origin">
                 Origin <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="origin"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Origin"
                 value={origin}
                 required
                 onChange={(e) => setOrigin(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="type">
                 Type/Grade/Specification{" "}
                 <span className="text-red-600 font-bold">*</span>
@@ -154,70 +243,84 @@ const Createpost = () => {
               <input
                 type="text"
                 id="type"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Type/Grade/Specification"
                 value={type}
                 required
                 onChange={(e) => setType(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="category">Category</label>
               <select
                 name="category"
                 id="category"
+                className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                  setSubCategory(""); // Reset subcategory when a new category is selected
+                }}
               >
                 <option value="">Select Category</option>
-                {/* {Categories.map((countryItem) => (
-                  <option
-                    key={countryItem.cca3}
-                    value={countryItem.name.common}
-                  >
-                    {countryItem.name.common}
+                {categories.map((categoryItem) => (
+                  <option key={categoryItem._id} value={categoryItem.name}>
+                    {categoryItem.name}
                   </option>
-                ))} */}
+                ))}
               </select>
+              </div>
+
+              <div className="flex-1 gap-4">
               <label htmlFor="sub-category">Sub Category</label>
               <select
                 name="sub-category"
                 id="sub-category"
+                className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                 value={subCategory}
                 onChange={(e) => setSubCategory(e.target.value)}
+                disabled={!category} // Disable the subcategory dropdown if no category is selected
               >
-                <option value="">Select Category First</option>
-                {/* {Categories.map((countryItem) => (
+                <option value="">Select Subcategory</option>
+                {subCategories.map((subCategoryItem) => (
                   <option
-                    key={countryItem.cca3}
-                    value={countryItem.name.common}
+                    key={subCategoryItem._id}
+                    value={subCategoryItem.name}
                   >
-                    {countryItem.name.common}
+                    {subCategoryItem.name}
                   </option>
-                ))} */}
+                ))}
               </select>
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="quantity">
                 Quantity<span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="quantity"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Ex: Min 30,000MT, Max 2Mbbls"
                 value={quantity}
                 required
                 onChange={(e) => setQuantity(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="contract">
                 Contract<span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="type"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Ex: SPOT, Annual, Trial+Annual"
                 value={contract}
                 required
                 onChange={(e) => setContract(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="discharging">
                 Discharging Port(s)
                 <span className="text-red-600 font-bold">*</span>
@@ -225,21 +328,25 @@ const Createpost = () => {
               <input
                 type="text"
                 id="discharging"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Port(s) Name"
                 value={discharging}
                 required
                 onChange={(e) => setDischarging(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="discharging_city">City (Discharge)</label>
               <input
                 type="text"
                 id="discharging_city"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Discharging City"
                 value={dischargingCity}
                 onChange={(e) => setDischargingCity(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="discharging_country">
                 Country (Discharge){" "}
                 <span className="text-red-600 font-bold">*</span>
@@ -247,33 +354,39 @@ const Createpost = () => {
               <input
                 type="text"
                 id="discharging_country"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Discharging Country"
                 value={dischargingCountry}
                 required
                 onChange={(e) => setDischargingCountry(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="loading">
                 Loading Port(s)<span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="loading"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Port(s) Name"
                 value={loading}
                 required
                 onChange={(e) => setLoading(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="loading_city">City (Loading)</label>
               <input
                 type="text"
                 id="loading_city"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Loading City"
                 value={loadingCity}
                 onChange={(e) => setLoadingCity(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="loading_country">
                 Country (Loading){" "}
                 <span className="text-red-600 font-bold">*</span>
@@ -281,24 +394,28 @@ const Createpost = () => {
               <input
                 type="text"
                 id="loading_country"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Loading Country"
                 value={loadingCountry}
                 required
                 onChange={(e) => setLoadingCountry(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="payment">
                 Payments <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 id="payment"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="EX: MT760 at sight, Transferable MT700, Revolving DLC"
                 value={payment}
                 required
                 onChange={(e) => setPayment(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="performance">
                 Performance Bond{" "}
                 <span className="text-red-600 font-bold">*</span>
@@ -306,12 +423,14 @@ const Createpost = () => {
               <input
                 type="text"
                 id="performance"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="EX: 2%"
                 value={performance}
                 required
                 onChange={(e) => setPerformance(e.target.value)}
               />
+              </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="inpspection">inspection</label>
               <div id="inspection" className="mt-2">
                 <label>
@@ -331,8 +450,9 @@ const Createpost = () => {
                   CIQ
                 </label>
               </div>
+              </div>
 
-              <div className="mt-2">
+              <div className="flex-1 gap-4 mt-2">
                 <label htmlFor="describeOther">Describe Other</label>
                 <input
                   type="text"
@@ -343,6 +463,7 @@ const Createpost = () => {
                   onChange={(e) => setOtherInspection(e.target.value)}
                 />
               </div>
+              <div className="flex-1 gap-4">
               <label htmlFor="incoterms">Incoterms</label>
               <div id="incoterms" className="mt-2">
                 <label>
@@ -362,8 +483,9 @@ const Createpost = () => {
                   CIQ
                 </label>
               </div>
+              </div>
 
-              <div className="mt-2">
+              <div className="flex-1 gap-4 mt-2">
                 <label htmlFor="describeOther">Describe Other</label>
                 <input
                   type="text"
@@ -374,60 +496,58 @@ const Createpost = () => {
                   onChange={(e) => setOtherIncoterms(e.target.value)}
                 />
               </div>
-              <label htmlFor="price">
-                Pice
-              </label>
+              <div className="flex-1 gap-4">
+              <label htmlFor="price">Pice</label>
               <input
                 type="text"
                 id="price"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="EX: Gross USD 300 Per MT,Net USD per"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
-              <label htmlFor="commission">
-                Commission Paid By
-              </label>
+              </div>
+              <div className="flex-1 gap-4">
+              <label htmlFor="commission">Commission Paid By</label>
               <input
                 type="text"
                 id="commission"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="EX: Seller, Buyer, Seller & Buyer"
                 value={commission}
                 onChange={(e) => setCommission(e.target.value)}
               />
-              <label htmlFor="total">
-                Total of
-              </label>
+              </div>
+              <div className="flex-1 gap-4">
+              <label htmlFor="total">Total of</label>
               <input
                 type="text"
                 id="total"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="EX: USD 10"
                 value={total}
                 onChange={(e) => setTotal(e.target.value)}
               />
-              <label htmlFor="description">
-                Description
-              </label>
+              </div>
+              <div className="flex-1 gap-4">
+              <label htmlFor="description">Description</label>
               <textarea
                 id="description"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 placeholder="Describe your offer in detail with your company name,contact,email,product name(s)."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <label htmlFor="file">
-                Upload File
-              </label>
+              </div>
+              <div className="flex-1 gap-4">
+              <label htmlFor="file">Upload File</label>
               <input
                 type="file"
                 id="file"
-                className="border"
+                className="px-3 py-4 border border-green-500 outline-yellow-500 rounded-md w-full md:w-96"
                 onChange={(e) => setFile(e.target.files[0])}
               />
             </div>
-
 
             <button
               type="submit"

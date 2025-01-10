@@ -3,11 +3,8 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { toast } from "react-toastify";
 import { FaCaretDown } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userProvider";
-
-
-
 
 const MemberRegistration = () => {
   const navigate = useNavigate();
@@ -26,9 +23,8 @@ const MemberRegistration = () => {
   const [selectedRoles, setSelectedRoles] = useState({});
   const [otherProductDescription, setOtherProductDescription] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
-  const [profile, setProfile] = useState(""); 
+  const [profile, setProfile] = useState("");
 
-  
   const [countries, setCountries] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryData, setCategoryData] = useState({});
@@ -128,16 +124,26 @@ const MemberRegistration = () => {
     e.preventDefault();
 
     // Check for required fields
-    if (!companyName || !mobileNumber || !telephoneNumber || !country || !city || !companyDescription) {
-        toast.error("Please fill out all required fields.");
-        return;
+    if (
+      !companyName ||
+      !mobileNumber ||
+      !telephoneNumber ||
+      !country ||
+      !city ||
+      !companyDescription
+    ) {
+      toast.error("Please fill out all required fields.");
+      return;
     }
 
     // Create a FormData object and append fields to it
     const formData = new FormData();
     formData.append("user_id", userId);
     formData.append("company_name", companyName.trim());
-    formData.append("company_website", companyWebsite ? companyWebsite.trim() : '');
+    formData.append(
+      "company_website",
+      companyWebsite ? companyWebsite.trim() : ""
+    );
     formData.append("phone_number", mobileNumber);
     formData.append("tel", telephoneNumber);
     formData.append("country", country);
@@ -152,44 +158,52 @@ const MemberRegistration = () => {
 
     // Append the profile file if it exists
     if (profile) {
-        formData.append("company_profile", profile);
+      formData.append("company_profile", profile);
     }
 
     // Send the formData to the backend (POST request)
     try {
-        const response = await fetch('http://localhost:9001/member_registrations', {
-            method: 'POST',
-            body: formData, // Send FormData directly
-        });
-
-        if (response.ok) {
-            // If the registration was successful, update the user type
-            const updateUserTypeResponse = await fetch(`http://localhost:9001/users/${userId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ user_type: 'member' }),
-            });
-
-            if (updateUserTypeResponse.ok) {
-                // Update sessionStorage
-                sessionStorage.setItem('user_type', 'member');
-                setUserType('member');
-
-                toast.success('You are now our member.');
-                navigate('/');
-            } else {
-                toast.error('Error updating user type: ' + updateUserTypeResponse.statusText);
-            }
-        } else {
-            toast.error('Error: ' + response.statusText);
+      const response = await fetch(
+        "http://localhost:9001/member_registrations",
+        {
+          method: "POST",
+          body: formData, // Send FormData directly
         }
+      );
+
+      if (response.ok) {
+        // If the registration was successful, update the user type
+        const updateUserTypeResponse = await fetch(
+          `http://localhost:9001/users/${userId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_type: "member" }),
+          }
+        );
+
+        if (updateUserTypeResponse.ok) {
+          // Update sessionStorage
+          sessionStorage.setItem("user_type", "member");
+          setUserType("member");
+
+          toast.success("You are now our member.");
+          navigate("/");
+        } else {
+          toast.error(
+            "Error updating user type: " + updateUserTypeResponse.statusText
+          );
+        }
+      } else {
+        toast.error("Error: " + response.statusText);
+      }
     } catch (error) {
-        toast.error('Error Finding Route: ' + error.message);
-        console.error('Error:', error);
+      toast.error("Error Finding Route: " + error.message);
+      console.error("Error:", error);
     }
-};
+  };
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -201,128 +215,162 @@ const MemberRegistration = () => {
         </div>
         <div>
           <form className="" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-5">
-              <label htmlFor="companyName">Company Name</label>
-              <input
-                type="text"
-                id="companyName"
-                className="border"
-                placeholder="Enter Company Name"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-              />
-              <label htmlFor="companyWebsite">Company Website</label>
-              <input
-                type="text"
-                id="companyWebsite"
-                className="border"
-                placeholder="Enter Company Website"
-                value={companyWebsite}
-                onChange={(e) => setCompanyWebsite(e.target.value)}
-              />
-              <label htmlFor="mobileNumber">Mobile Number</label>
-              <PhoneInput
-                country={"us"}
-                value={mobileNumber}
-                onChange={(phone) => setMobileNumber(phone)}
-                required
-              />
-              <label htmlFor="telephoneNumber">Telephone Number</label>
-              <input
-                type="tel"
-                id="telephoneNumber"
-                className="border"
-                placeholder="Enter Telephone Number"
-                value={telephoneNumber}
-                onChange={(e) => setTelephoneNumber(e.target.value)}
-                required
-              />
-              <label htmlFor="country">Country</label>
-              <select
-                name="country"
-                id="country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                required
-              >
-                <option value="">Select Country</option>
-                {countries.map((countryItem) => (
-                  <option
-                    key={countryItem.cca3}
-                    value={countryItem.name.common}
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="companyName">Company Name</label>
+                  <input
+                    type="text"
+                    id="companyName"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter Company Name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="companyWebsite">Company Website</label>
+                  <input
+                    type="text"
+                    id="companyWebsite"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter Company Website"
+                    value={companyWebsite}
+                    onChange={(e) => setCompanyWebsite(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="mobileNumber">Mobile Number</label>
+                  <PhoneInput
+                    country={"us"}
+                    value={mobileNumber}
+                    onChange={(phone) => setMobileNumber(phone)}
+                    required
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="telephoneNumber">Telephone Number</label>
+                  <input
+                    type="tel"
+                    id="telephoneNumber"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter Telephone Number"
+                    value={telephoneNumber}
+                    onChange={(e) => setTelephoneNumber(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="country">Country</label>
+                  <select
+                    name="country"
+                    id="country"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    required
                   >
-                    {countryItem.name.common}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="city">City</label>
-              <input
-                type="text"
-                id="city"
-                className="border"
-                placeholder="Enter City"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                required
-              />
-
-              <label htmlFor="sns1">SNS1</label>
-              <select
-                name="sns1"
-                id="sns1"
-                value={sns1}
-                onChange={(e) => setSns1(e.target.value)}
-              >
-                {snsOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    disabled={option.value === sns2}
+                    <option value="">Select Country</option>
+                    {countries.map((countryItem) => (
+                      <option
+                        key={countryItem.cca3}
+                        value={countryItem.name.common}
+                      >
+                        {countryItem.name.common}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="city">City</label>
+                  <input
+                    type="text"
+                    id="city"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="sns1">SNS1</label>
+                  <select
+                    name="sns1"
+                    id="sns1"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    value={sns1}
+                    onChange={(e) => setSns1(e.target.value)}
                   >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="sns2">SNS2</label>
-              <select
-                name="sns2"
-                id="sns2"
-                value={sns2}
-                onChange={(e) => setSns2(e.target.value)}
-              >
-                {snsOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    disabled={option.value === sns1}
+                    {snsOptions.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.value === sns2}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="sns1Id">SNS 1 :</label>
+                  <input
+                    type="text"
+                    id="sns1Id"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter Your ID"
+                    value={sns1Id}
+                    onChange={(e) => setSns1Id(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="sns2Id">SNS 2 :</label>
+                  <input
+                    type="text"
+                    id="sns2Id"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Enter Your ID"
+                    value={sns2Id}
+                    onChange={(e) => setSns2Id(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="sns2">SNS2</label>
+                  <select
+                    name="sns2"
+                    id="sns2"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    value={sns2}
+                    onChange={(e) => setSns2(e.target.value)}
                   >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="sns1Id">SNS 1 :</label>
-              <input
-                type="text"
-                id="sns1Id"
-                className="border"
-                placeholder="Enter Your ID"
-                value={sns1Id}
-                onChange={(e) => setSns1Id(e.target.value)}
-              />
-              <label htmlFor="sns2Id">SNS 2 :</label>
-              <input
-                type="text"
-                id="sns2Id"
-                className="border"
-                placeholder="Enter Your ID"
-                value={sns2Id}
-                onChange={(e) => setSns2Id(e.target.value)}
-              />
+                    {snsOptions.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.value === sns1}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <h2>Please select all of your trade roles below:</h2>
+            <div className="mt-4">
+              <h2 className="text-2xl font-semibold">
+                Please select all of your trade roles below:
+              </h2>
               <p>Click ⮟ to open product list</p>
               {categories.map((category) => (
                 <React.Fragment key={category._id}>
@@ -421,41 +469,42 @@ const MemberRegistration = () => {
                   type="text"
                   name="other_description"
                   id="other_description"
-                  className="border"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                   placeholder="Please list all the other product(s)"
                   value={otherProductDescription}
-                onChange={(e) => setOtherProductDescription(e.target.value)}
+                  onChange={(e) => setOtherProductDescription(e.target.value)}
                 />
               </div>
             </div>
 
             <div className="flex flex-col">
-              <label htmlFor="companyDescription">
-                Company Description
-              </label>
-              <textarea
-                name="companyDescription"
-                id="companyDescription"
-                placeholder="Please describe your company and project within 150 words"
-                className="border"
-                value={companyDescription}
-                onChange={(e) => setCompanyDescription(e.target.value)}
-              />
-
-              <label htmlFor="profile">
-                Upload Company Profile (Optional):
-              </label>
-              <input
-                type="file"
-                id="profile"
-                className="border"
-                onChange={(e) => setProfile(e.target.files[0])}
-              />
+              <div className="flex-1 flex-col">
+                <label htmlFor="companyDescription">Company Description</label>
+                <textarea
+                  name="companyDescription"
+                  id="companyDescription"
+                  placeholder="Please describe your company and project within 150 words"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  value={companyDescription}
+                  onChange={(e) => setCompanyDescription(e.target.value)}
+                />
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="profile">
+                  Upload Company Profile (Optional):
+                </label>
+                <input
+                  type="file"
+                  id="profile"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  onChange={(e) => setProfile(e.target.files[0])}
+                />
+              </div>
             </div>
 
             <button
               type="submit"
-              className="px-5 py-4 w-full text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl"
+              className="px-5 py-4 mt-4 w-full text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl"
             >
               Register
             </button>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FaCaretDown } from "react-icons/fa";
 import { useUser } from "../../context/userProvider";
 const MemberRegistration = () => {
@@ -47,7 +47,6 @@ const MemberRegistration = () => {
   const [countries, setCountries] = useState([]);
 
   const { setUserType } = useUser();
-
 
   const snsOptions = [
     { value: "none", label: "None" },
@@ -94,10 +93,9 @@ const MemberRegistration = () => {
         throw new Error("Failed to fetch user data");
       }
       const data = await response.json();
-      
+
       setfirstName(data.first_name);
       setlastName(data.last_name);
-      
     } catch (error) {
       console.error("Error fetching countries:", error);
     }
@@ -143,7 +141,6 @@ const MemberRegistration = () => {
     });
   };
   useEffect(() => {
-    
     fetchUser();
     fetchData();
     fetchCountries();
@@ -159,248 +156,307 @@ const MemberRegistration = () => {
 
     // Create a FormData object to hold all the form data, including files
     const formData = new FormData();
-    formData.append('user_id', userId);
-    formData.append('company_name', companyName);
-    formData.append('company_website', companyWebsite);
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
-    formData.append('company_registration_copy', companyRegistrationCopy); // File
-    formData.append('passport_copy', passportCopy); // File
-    formData.append('mobile_number', mobileNumber);
-    formData.append('telephone_number', telephoneNumber);
-    formData.append('country', country);
-    formData.append('city', city);
-    formData.append('sns1', sns1);
-    formData.append('sns2', sns2);
-    formData.append('sns1_id', sns1Id);
-    formData.append('sns2_id', sns2Id);
-    formData.append('selected_roles', JSON.stringify(selectedRoles)); // Convert object to string
-    formData.append('bank_name', bankName);
-    formData.append('bank_address', bankAddress);
-    formData.append('swiss_code', swissCode);
-    formData.append('bank_account_name', bankAccountName);
-    formData.append('bank_account_number', bankAccountNumber);
-    formData.append('bank_telephone_number', bankTelephoneNumber);
-    formData.append('bank_fax_number', bankFaxNumber);
-    formData.append('bank_officer_name', bankOfficerName);
-    formData.append('bank_officer_email', bankOfficerEmail);
-    formData.append('bank_website', bankWebsite);
-    formData.append('correspondent_bank_name', correspondentBankName);
-    formData.append('bic_code', bicCode);
-    formData.append('other_suggestions', otherSuggestions);
-    formData.append('resume', resume); // File
-    formData.append('profile', profile); // File
+    formData.append("user_id", userId);
+    formData.append("company_name", companyName);
+    formData.append("company_website", companyWebsite);
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName);
+    formData.append("company_registration_copy", companyRegistrationCopy); // File
+    formData.append("passport_copy", passportCopy); // File
+    formData.append("mobile_number", mobileNumber);
+    formData.append("telephone_number", telephoneNumber);
+    formData.append("country", country);
+    formData.append("city", city);
+    formData.append("sns1", sns1);
+    formData.append("sns2", sns2);
+    formData.append("sns1_id", sns1Id);
+    formData.append("sns2_id", sns2Id);
+    formData.append("selected_roles", JSON.stringify(selectedRoles)); // Convert object to string
+    formData.append("bank_name", bankName);
+    formData.append("bank_address", bankAddress);
+    formData.append("swiss_code", swissCode);
+    formData.append("bank_account_name", bankAccountName);
+    formData.append("bank_account_number", bankAccountNumber);
+    formData.append("bank_telephone_number", bankTelephoneNumber);
+    formData.append("bank_fax_number", bankFaxNumber);
+    formData.append("bank_officer_name", bankOfficerName);
+    formData.append("bank_officer_email", bankOfficerEmail);
+    formData.append("bank_website", bankWebsite);
+    formData.append("correspondent_bank_name", correspondentBankName);
+    formData.append("bic_code", bicCode);
+    formData.append("other_suggestions", otherSuggestions);
+    formData.append("resume", resume); // File
+    formData.append("profile", profile); // File
 
     // Send the formData to the backend (POST request)
     try {
-      const response = await fetch('http://localhost:9001/partner_registrations', {
-          method: 'POST',
+      const response = await fetch(
+        "http://localhost:9001/partner_registrations",
+        {
+          method: "POST",
           body: formData, // Send FormData directly
-      });
+        }
+      );
 
       if (response.ok) {
-          // If the registration was successful, update the user type
-          const updateUserTypeResponse = await fetch(`http://localhost:9001/users/${userId}`, {
-              method: 'PATCH',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ user_type: 'partner' }),
-          });
-
-          if (updateUserTypeResponse.ok) {
-              // Update sessionStorage
-              sessionStorage.setItem('user_type', 'partner');
-              setUserType('partner');
-
-              toast.success('You are now our Partner.');
-              navigate('/');
-          } else {
-              toast.error('Error updating user type: ' + updateUserTypeResponse.statusText);
+        // If the registration was successful, update the user type
+        const updateUserTypeResponse = await fetch(
+          `http://localhost:9001/users/${userId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_type: "partner" }),
           }
+        );
+
+        if (updateUserTypeResponse.ok) {
+          // Update sessionStorage
+          sessionStorage.setItem("user_type", "partner");
+          setUserType("partner");
+
+          toast.success("You are now our Partner.");
+          navigate("/");
+        } else {
+          toast.error(
+            "Error updating user type: " + updateUserTypeResponse.statusText
+          );
+        }
       } else {
-          toast.error('Error: ' + response.statusText);
+        toast.error("Error: " + response.statusText);
       }
     } catch (error) {
-        toast.error('Error: ' + error.message);
-        console.error('Error:', error);
+      toast.error("Error: " + error.message);
+      console.error("Error:", error);
     }
-};
-
-
+  };
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="lg:p-10 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-6/6 md:w-5/6 lg:w-4/6 flex flex-col items-center gap-10">
+      <div className="lg:p-10 md:p-10 py-10 px-3 shadow-2xl border-2 my-10 w-6/6 md:w-5/6 lg:w-4/6 flex flex-col items-center gap-6">
         <div>
-          <h1 className="text-center text-4xl font-bold mb-3">
-            Partner Register
-          </h1>
+          <h1 className="text-4xl font-bold mb-3">Partner Register</h1>
         </div>
         <div>
-          <form className="" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-5">
-              <label htmlFor="companyName">
-                Company Name <span className="text-red-600 font-bold">*</span>
-              </label>
-              <input
-                type="text"
-                id="companyName"
-                className="border"
-                placeholder="Enter Company Name"
-                value={companyName}
-                required
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
-              <label htmlFor="companyWebsite">Company Website</label>
-              <input
-                type="text"
-                id="companyWebsite"
-                className="border"
-                placeholder="Enter Company Website"
-                value={companyWebsite}
-                onChange={(e) => setCompanyWebsite(e.target.value)}
-              />
-              <label htmlFor="firstname">
-                First Name <span className="text-red-600 font-bold">*</span>
-              </label>
-              <input
-                type="text"
-                id="firstname"
-                className="border"
-                placeholder="First Name"
-                value={firstName}
-                required
-                onChange={(e) => setfirstName(e.target.value)}
-              />
-              <label htmlFor="lastname">
-                Last Name <span className="text-red-600 font-bold">*</span>
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                className="border"
-                placeholder="Last Name"
-                value={lastName}
-                required
-                onChange={(e) => setlastName(e.target.value)}
-              />
+          <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="companyName">
+                  Company Name <span className="text-red-600 font-bold">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="companyName"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter Company Name"
+                  value={companyName}
+                  required
+                  onChange={(e) => setCompanyName(e.target.value)}
+                />
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="companyWebsite">Company Website</label>
+                <input
+                  type="text"
+                  id="companyWebsite"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter Company Website"
+                  value={companyWebsite}
+                  onChange={(e) => setCompanyWebsite(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="firstname">
+                  First Name <span className="text-red-600 font-bold">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="firstname"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="First Name"
+                  value={firstName}
+                  required
+                  onChange={(e) => setfirstName(e.target.value)}
+                />
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="lastname">
+                  Last Name <span className="text-red-600 font-bold">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Last Name"
+                  value={lastName}
+                  required
+                  onChange={(e) => setlastName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
               <label htmlFor="companyRegistration">
                 Upload Company Registration Copy: (Optional)
               </label>
               <input
                 type="file"
                 id="companyRegistration"
-                className="border"
+                className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                 onChange={(e) => setCompanyRegistrationCopy(e.target.files[0])}
               />
+            </div>
+            <div className="flex flex-col">
               <label htmlFor="passport">
                 Upload Passport (National ID) Copy: (Optional)
               </label>
               <input
                 type="file"
                 id="passport"
-                className="border"
+                className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                 onChange={(e) => setPassportCopy(e.target.files[0])}
               />
-              <label htmlFor="mobileNumber">Mobile Number</label>
-              <PhoneInput
-                country={"us"}
-                value={mobileNumber}
-                onChange={(phone) => setMobileNumber(phone)}
-              />
-              <label htmlFor="telephoneNumber">Telephone Number</label>
-              <input
-                type="tel"
-                id="telephoneNumber"
-                className="border"
-                placeholder="Enter Telephone Number"
-                value={telephoneNumber}
-                onChange={(e) => setTelephoneNumber(e.target.value)}
-              />
-              <label htmlFor="country">Country</label>
-              <select
-                name="country"
-                id="country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-              >
-                <option value="">Select Country</option>
-                {countries.map((countryItem) => (
-                  <option
-                    key={countryItem.cca3}
-                    value={countryItem.name.common}
-                  >
-                    {countryItem.name.common}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="city">City</label>
-              <input
-                type="text"
-                id="city"
-                className="border"
-                placeholder="Enter City"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="mobileNumber">Mobile Number</label>
+                <PhoneInput
+                  country={"us"}
+                  value={mobileNumber}
+                  onChange={(phone) => setMobileNumber(phone)}
+                  className="px-3 py-1 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  inputStyle={{
+                    width: "100%",
+                    outline: "none",
+                    color: "black",
+                    border: "none",
+                  }}
+                  buttonStyle={{
+                    backgroundColor: "transparent",
+                    border: "none",
+                  }}
+                />
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="telephoneNumber">Telephone Number</label>
+                <input
+                  type="tel"
+                  id="telephoneNumber"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter Telephone Number"
+                  value={telephoneNumber}
+                  onChange={(e) => setTelephoneNumber(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="country">Country</label>
+                <select
+                  name="country"
+                  id="country"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((countryItem) => (
+                    <option
+                      key={countryItem.cca3}
+                      value={countryItem.name.common}
+                    >
+                      {countryItem.name.common}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="sns1">SNS1</label>
+                <select
+                  name="sns1"
+                  id="sns1"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  value={sns1}
+                  onChange={(e) => setSns1(e.target.value)}
+                >
+                  {snsOptions.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                      disabled={option.value === sns2}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1 flex-col">
+                <label htmlFor="sns1Id">SNS 1 :</label>
+                <input
+                  type="text"
+                  id="sns1Id"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter Your ID"
+                  value={sns1Id}
+                  onChange={(e) => setSns1Id(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 flex-col">
+                <label htmlFor="sns2">SNS2</label>
+                <select
+                  name="sns2"
+                  id="sns2"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  value={sns2}
+                  onChange={(e) => setSns2(e.target.value)}
+                >
+                  {snsOptions.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                      disabled={option.value === sns1}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <label htmlFor="sns1">SNS1</label>
-              <select
-                name="sns1"
-                id="sns1"
-                value={sns1}
-                onChange={(e) => setSns1(e.target.value)}
-              >
-                {snsOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    disabled={option.value === sns2}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="sns2">SNS2</label>
-              <select
-                name="sns2"
-                id="sns2"
-                value={sns2}
-                onChange={(e) => setSns2(e.target.value)}
-              >
-                {snsOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    disabled={option.value === sns1}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="sns1Id">SNS 1 :</label>
-              <input
-                type="text"
-                id="sns1Id"
-                className="border"
-                placeholder="Enter Your ID"
-                value={sns1Id}
-                onChange={(e) => setSns1Id(e.target.value)}
-              />
-              <label htmlFor="sns2Id">SNS 2 :</label>
-              <input
-                type="text"
-                id="sns2Id"
-                className="border"
-                placeholder="Enter Your ID"
-                value={sns2Id}
-                onChange={(e) => setSns2Id(e.target.value)}
-              />
+              <div className="flex-1 flex-col">
+                <label htmlFor="sns2Id">SNS 2 :</label>
+                <input
+                  type="text"
+                  id="sns2Id"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  placeholder="Enter Your ID"
+                  value={sns2Id}
+                  onChange={(e) => setSns2Id(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div>
-              <h2>Please select all of your trade roles below:</h2>
+            <div className="mt-4">
+              <h2 className="text-2xl font-semibold">
+                Please select all of your trade roles below:
+              </h2>
               <p>Click ⮟ to open product list</p>
               {categories.map((category) => (
                 <React.Fragment key={category._id}>
@@ -499,17 +555,19 @@ const MemberRegistration = () => {
                   type="text"
                   name="other_description"
                   id="other_description"
-                  className="border"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
                   placeholder="Please list all the other product(s)"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-5">
-              <h2>Please select all partner participation activities below</h2>
-              <div className="flex flex-col gap-2">
+            <div className="flex flex-col mt-4">
+              <h2 className="text-2xl font-semibold">
+                Please select all partner participation activities below:
+              </h2>
+              <div className="flex flex-col">
                 <label htmlFor="consultAccept">
-                  Find and/or Consult with local sellers, buyers, financiers *
+                  Find and/or Consult with local sellers, buyers, financiers<span className="text-red-600 font-bold">*</span>
                 </label>
                 <div className="flex flex-row gap-1">
                   <input
@@ -529,9 +587,9 @@ const MemberRegistration = () => {
                   <span>No Thanks</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <label htmlFor="inspectionAccept">
-                  Working with Inspection Agency at the Port *
+                  Working with Inspection Agency at the Port<span className="text-red-600 font-bold">*</span>
                 </label>
                 <div className="flex flex-row gap-1">
                   <input
@@ -552,9 +610,9 @@ const MemberRegistration = () => {
                   <span>No Thanks</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <label htmlFor="shippingAccept">
-                  Working with Shipping Agency for the Export, Import Process *
+                  Working with Shipping Agency for the Export, Import Process<span className="text-red-600 font-bold">*</span>
                 </label>
                 <div className="flex flex-row gap-1">
                   <input
@@ -575,10 +633,9 @@ const MemberRegistration = () => {
                   <span>No Thanks</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <label htmlFor="newsAccept">
-                  Upload the News and Rank the member’s postings on our website
-                  *
+                  Upload the News and Rank the member’s postings on our website<span className="text-red-600 font-bold">*</span>
                 </label>
                 <div className="flex flex-row gap-1">
                   <input
@@ -601,159 +658,214 @@ const MemberRegistration = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5">
-              <label htmlFor="otherSuggestions">
-                Other suggested activities if any
-              </label>
-              <textarea
-                name="otherSuggestions"
-                id="otherSuggestions"
-                placeholder="Please describe your suggestions"
-                className="border"
-                value={otherSuggestions}
-                onChange={(e) => setOtherSuggestions(e.target.value)}
-              />
-              <label htmlFor="resume">
-                Upload Resume or Company Profile (Optional):
-              </label>
-              <p>
-                Your resume is required for us to review and give access level
-                in our website.
-              </p>
-              <input
-                type="file"
-                id="resume"
-                className="border"
-                onChange={(e) => setResume(e.target.files[0])}
-              />
-              <label htmlFor="profile">
-                Upload Company Profile (Optional):
-              </label>
-              <input
-                type="file"
-                id="profile"
-                className="border"
-                onChange={(e) => setProfile(e.target.files[0])}
-              />
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col">
+                <label htmlFor="otherSuggestions">
+                  Other suggested activities if any
+                </label>
+                <textarea
+                  name="otherSuggestions"
+                  id="otherSuggestions"
+                  placeholder="Please describe your suggestions"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  value={otherSuggestions}
+                  onChange={(e) => setOtherSuggestions(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="resume">
+                  Upload Resume or Company Profile (Optional):
+                </label>
+                <p className="text-sm text-gray-500">
+                  Your resume is required for us to review and give access level
+                  in our website.
+                </p>
+                <input
+                  type="file"
+                  id="resume"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  onChange={(e) => setResume(e.target.files[0])}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="profile">
+                  Upload Company Profile (Optional):
+                </label>
+                <input
+                  type="file"
+                  id="profile"
+                  className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                  onChange={(e) => setProfile(e.target.files[0])}
+                />
+              </div>
             </div>
 
-            <div className="flex flex-col gap-5">
-              <h2>
-                Bank Information (Optional) to receive the Service Fees for
-                partner’s activities
+            {/* Bank Information */}
+            <div className="flex flex-col mt-4">
+              <h2 className="text-2xl font-semibold">
+                Bank Information(Optional):
               </h2>
-              <label htmlFor="bankName">Bank Name</label>
-              <input
-                type="text"
-                id="bankName"
-                className="border"
-                placeholder="Name of the bank"
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-              />
-              <label htmlFor="bankAddress">Bank Address</label>
-              <input
-                type="text"
-                id="bankAddress"
-                className="border"
-                placeholder="Bank address/city/country"
-                value={bankAddress}
-                onChange={(e) => setBankAddress(e.target.value)}
-              />
-              <label htmlFor="bicCode">BIC/SWIFT Code</label>
-              <input
-                type="text"
-                id="bicCode"
-                className="border"
-                placeholder="BIC/SWIFT Code"
-                value={bicCode}
-                onChange={(e) => setBicCode(e.target.value)}
-              />
-              <label htmlFor="bankAccountName">Account Name</label>
-              <input
-                type="text"
-                id="bankAccountName"
-                className="border"
-                placeholder="Account Name"
-                value={bankAccountName}
-                onChange={(e) => setBankAccountName(e.target.value)}
-              />
-              <label htmlFor="bankAccountNumber">Account Number</label>
-              <input
-                type="text"
-                id="bankAccountNumber"
-                className="border"
-                placeholder="Account Number"
-                value={bankAccountNumber}
-                onChange={(e) => setBankAccountNumber(e.target.value)}
-              />
-              <label htmlFor="bankTelephoneNumber">Bank Telephone Number</label>
-              <PhoneInput
-                country={"us"}
-                value={bankTelephoneNumber}
-                onChange={(phone) => setBankTelephoneNumber(phone)}
-              />
-              <label htmlFor="bankFaxNumber">Bank Fax Number</label>
-              <input
-                type="text"
-                id="bankFaxNumber"
-                className="border"
-                placeholder="Bank fax Number"
-                value={bankFaxNumber}
-                onChange={(e) => setBankFaxNumber(e.target.value)}
-              />
-              <label htmlFor="bankOfficerName">Bank Officer Name</label>
-              <input
-                type="text"
-                id="bankOfficerName"
-                className="border"
-                placeholder="Bank Officer Name"
-                value={bankOfficerName}
-                onChange={(e) => setBankOfficerName(e.target.value)}
-              />
-              <label htmlFor="bankOfficerEmail">Bank Office Email</label>
-              <input
-                type="text"
-                id="bankOfficerEmail"
-                className="border"
-                placeholder="Bank officer Email"
-                value={bankOfficerEmail}
-                onChange={(e) => setBankOfficerEmail(e.target.value)}
-              />
-              <label htmlFor="bankWebsite">Bank Website</label>
-              <input
-                type="text"
-                id="bankWebsite"
-                className="border"
-                placeholder="Bank Website URL"
-                value={bankWebsite}
-                onChange={(e) => setBankWebsite(e.target.value)}
-              />
-              <label htmlFor="correspondentBankName">
-                Correspondent Bank Name
-              </label>
-              <input
-                type="text"
-                id="correspondentBankName"
-                className="border"
-                placeholder="Correspondent Bank Name"
-                value={correspondentBankName}
-                onChange={(e) => setCorrespondentBankName(e.target.value)}
-              />
-              <label htmlFor="correspondentBicCode">BIC/SWIFT Code</label>
-              <input
-                type="text"
-                id="correspondentBicCode"
-                className="border"
-                placeholder="Correspondent BIC/SWIFT Code"
-                value={swissCode}
-                onChange={(e) => setSwissCode(e.target.value)}
-              />
+              <p className="text-gray-500 text-sm">
+                {" "}
+                to receive the Service Fees for partner’s activities
+              </p>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankName">Bank Name</label>
+                  <input
+                    type="text"
+                    id="bankName"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Name of the bank"
+                    value={bankName}
+                    onChange={(e) => setBankName(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankAddress">Bank Address</label>
+                  <input
+                    type="text"
+                    id="bankAddress"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Bank address/city/country"
+                    value={bankAddress}
+                    onChange={(e) => setBankAddress(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bicCode">BIC/SWIFT Code</label>
+                  <input
+                    type="text"
+                    id="bicCode"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="BIC/SWIFT Code"
+                    value={bicCode}
+                    onChange={(e) => setBicCode(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankAccountName">Account Name</label>
+                  <input
+                    type="text"
+                    id="bankAccountName"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Account Name"
+                    value={bankAccountName}
+                    onChange={(e) => setBankAccountName(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankAccountNumber">Account Number</label>
+                  <input
+                    type="text"
+                    id="bankAccountNumber"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Account Number"
+                    value={bankAccountNumber}
+                    onChange={(e) => setBankAccountNumber(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankTelephoneNumber">
+                    Bank Telephone Number
+                  </label>
+                  <PhoneInput
+                    country={"us"}
+                    value={bankTelephoneNumber}
+                    onChange={(phone) => setBankTelephoneNumber(phone)}
+                    className="px-3 py-2 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    inputStyle={{
+                      width: "100%",
+                      outline: "none",
+                      color: "black",
+                      border: "none",
+                    }}
+                    buttonStyle={{
+                      backgroundColor: "transparent",
+                      border: "none",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankFaxNumber">Bank Fax Number</label>
+                  <input
+                    type="text"
+                    id="bankFaxNumber"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Bank fax Number"
+                    value={bankFaxNumber}
+                    onChange={(e) => setBankFaxNumber(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankOfficerName">Bank Officer Name</label>
+                  <input
+                    type="text"
+                    id="bankOfficerName"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Bank Officer Name"
+                    value={bankOfficerName}
+                    onChange={(e) => setBankOfficerName(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankOfficerEmail">Bank Office Email</label>
+                  <input
+                    type="text"
+                    id="bankOfficerEmail"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Bank officer Email"
+                    value={bankOfficerEmail}
+                    onChange={(e) => setBankOfficerEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1 flex-col">
+                  <label htmlFor="bankWebsite">Bank Website</label>
+                  <input
+                    type="text"
+                    id="bankWebsite"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Bank Website URL"
+                    value={bankWebsite}
+                    onChange={(e) => setBankWebsite(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="correspondentBankName">
+                    Correspondent Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    id="correspondentBankName"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Correspondent Bank Name"
+                    value={correspondentBankName}
+                    onChange={(e) => setCorrespondentBankName(e.target.value)}
+                  />
+                </div>
+                <div className="flex-1 flex-col">
+                  <label htmlFor="correspondentBicCode">BIC/SWIFT Code</label>
+                  <input
+                    type="text"
+                    id="correspondentBicCode"
+                    className="px-3 py-2.5 border border-green-500 outline-yellow-500 rounded-md w-full"
+                    placeholder="Correspondent BIC/SWIFT Code"
+                    value={swissCode}
+                    onChange={(e) => setSwissCode(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
 
             <button
               type="submit"
-              className="px-5 py-4 text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl"
+              className="py-3 mt-4 w-full text-white bg-lime-500 rounded-md font-semibold hover:bg-lime-600 transition ease-in-out duration-300 hover:drop-shadow-xl"
             >
               Register
             </button>
